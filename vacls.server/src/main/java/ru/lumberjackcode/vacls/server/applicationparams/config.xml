@@ -1,0 +1,9 @@
+<VaclsServerParams>
+  <ConnectionParams>
+    <portClient>8000</portClient>
+    <portAdmin>5000</portAdmin>
+  </ConnectionParams>
+  <SystemParams>
+    <maxThreadPoolNumber>1</maxThreadPoolNumber>
+  </SystemParams>
+</VaclsServerParams>
