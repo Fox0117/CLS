@@ -1,0 +1,23 @@
+<VaclsClientParams>
+    <ID>string</ID>
+
+    <OpenCVPath>string</OpenCVPath>
+
+    <ServerParams>
+        <serverURL>localhost</serverURL>
+        <port>3</port>
+        <serverTimeout>3</serverTimeout>
+    </ServerParams>
+
+    <VideoParams>
+        <CapturingDevice>string</CapturingDevice>
+        <frameWidth>3</frameWidth>
+        <frameHeight>3</frameHeight>
+    </VideoParams>
+
+    <HotKeysParams>
+        <CloseWindow>string</CloseWindow>
+        <ForceShot>string</ForceShot>
+    </HotKeysParams>
+
+</VaclsClientParams>

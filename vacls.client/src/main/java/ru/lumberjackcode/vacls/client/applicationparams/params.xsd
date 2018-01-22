@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element type="VaclsClientParams" name="VaclsClientParams"/>
+
+    <xs:complexType name="ServerParams">
+        <xs:sequence>
+            <xs:element type="xs:string" name="serverURL" default="localhost"/>
+            <xs:element type="xs:int" name="port" default="8000"/>
+            <xs:element type="xs:int" name="serverTimeout" default="100000"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VideoParams">
+        <xs:sequence>
+            <xs:element type="xs:string" name="CapturingDevice" default="0"/>
+            <xs:element type="xs:int" name="frameWidth"/>
+            <xs:element type="xs:int" name="frameHeight"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HotKeys">
+        <xs:sequence>
+            <xs:element type="xs:string" name="CloseWindow"/>
+            <xs:element type="xs:string" name="ForceShot"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VaclsClientParams">
+        <xs:sequence>
+            <xs:element type="xs:string" name="ID"/>
+            <xs:element type="xs:string" name="OpenCVPath"/>
+            <xs:element type="ServerParams" name="ServerParams"/>
+            <xs:element type="VideoParams" name="VideoParams"/>
+            <xs:element type="HotKeys" name="HotKeysParams"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
