@@ -27,13 +27,14 @@ public class ReactiveFramesPublisher implements Runnable{
      * @param frameWidth width of the frame
      * @param frameHeight height of the frame
      */
-    public ReactiveFramesPublisher(int videoSourceId, int frameWidth, int frameHeight){
+    public ReactiveFramesPublisher(int videoSourceId, int frameWidth, int frameHeight) throws Exception{
 
         videoSource = new VideoCapture(videoSourceId);
 
         if ( !videoSource.isOpened() ){
             IOException toThrow = new IOException("Can't open video source with id: " + videoSourceId);
             log.error("Can't open video source with id: " + videoSourceId, toThrow);
+            throw toThrow;
         }
 
         if(frameHeight > 0 && frameWidth >0){
@@ -42,10 +43,23 @@ public class ReactiveFramesPublisher implements Runnable{
             IllegalArgumentException toThrow =
                     new IllegalArgumentException("Frame heigth and frame size must be greater than 0");
             log.error("Frame heigth and frame size must be greater than 0", toThrow);
+            throw toThrow;
         }
 
         log.info("Video source " + videoSourceId + " opened with resolution " + frameWidth + "x" + frameHeight);
 
+    }
+
+    /**
+     * Creates new reactive frames publisher with event handlers list
+     * @param videoSourceId camera id (ex. /dev/video0 -> 0)
+     * @param frameWidth width of the frame
+     * @param frameHeight height of the frame
+     * @param newFrameHandlers event handlers list
+     */
+    public ReactiveFramesPublisher(int videoSourceId, int frameWidth, int frameHeight, List<INewFrameHandler> newFrameHandlers) throws Exception{
+        this(videoSourceId, frameWidth, frameHeight);
+        this.newFrameHandlers = newFrameHandlers;
     }
 
     @Override
@@ -54,9 +68,13 @@ public class ReactiveFramesPublisher implements Runnable{
         while (!Thread.interrupted()){
             Mat newFrame = new Mat(), newFrameResized = new Mat();
 
+
+
             if( !videoSource.read(newFrame) ){
+                RuntimeException toThrow = new RuntimeException("Failed to read next frame from camera");
                 log.error("Failed to read next frame from camera",
-                        new RuntimeException("Failed to read next frame from camera"));
+                        toThrow);
+                throw toThrow;
             }
 
 
@@ -87,17 +105,7 @@ public class ReactiveFramesPublisher implements Runnable{
         log.error("Thread with camera listener was interrupted", new InterruptedException());
     }
 
-    /**
-     * Creates new reactive frames publisher with event handlers list
-     * @param videoSourceId camera id (ex. /dev/video0 -> 0)
-     * @param frameWidth width of the frame
-     * @param frameHeight height of the frame
-     * @param newFrameHandlers event handlers list
-     */
-    public ReactiveFramesPublisher(int videoSourceId, int frameWidth, int frameHeight, List<INewFrameHandler> newFrameHandlers){
-        this(videoSourceId, frameWidth, frameHeight);
-        this.newFrameHandlers = newFrameHandlers;
-    }
+
 
 
 

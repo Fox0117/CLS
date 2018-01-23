@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import ru.lumberjackcode.vacls.client.applicationparams.VaclsClientParams;
+import ru.lumberjackcode.vacls.client.applicationparams.VideoParams;
+import ru.lumberjackcode.vacls.client.reactiveFramesPublisher.ReactiveFramesPublisher;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -48,6 +50,17 @@ public class Main {
         }catch (Exception ex){
             log.error("Bad OpenCV lib path" ,ex);
         }
+
+        VideoParams videoParams = params.getVideoParams();
+
+        ReactiveFramesPublisher reactiveFramesPublisher = new ReactiveFramesPublisher(
+                Integer.parseInt( videoParams.getCapturingDevice() ),
+                videoParams.getFrameWidth(),
+                videoParams.getFrameHeight()
+        );
+
+        Thread mainLogicThread = new Thread(reactiveFramesPublisher);
+        mainLogicThread.start();
 
         log.info("Main OK");
     }

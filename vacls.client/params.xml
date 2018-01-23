@@ -10,9 +10,9 @@
     </ServerParams>
 
     <VideoParams>
-        <CapturingDevice>string</CapturingDevice>
-        <frameWidth>3</frameWidth>
-        <frameHeight>3</frameHeight>
+        <CapturingDevice>0</CapturingDevice>
+        <frameWidth>320</frameWidth>
+        <frameHeight>280</frameHeight>
     </VideoParams>
 
     <HotKeysParams>
