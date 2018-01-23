@@ -17,11 +17,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>local-repo</id>
+            <url>file://local-repo</url>
+            <name>Vacls project repo</name>
+
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+
+        </repository>
+    </repositories>
+
     <modules>
         <module>vacls.client</module>
         <module>vacls.server</module>
     </modules>
-
 
 
 </project>

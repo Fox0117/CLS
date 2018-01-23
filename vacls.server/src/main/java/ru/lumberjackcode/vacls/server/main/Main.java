@@ -44,6 +44,13 @@ public class Main {
             System.exit(1);
         }
 
+        // Loading OpenCV lib
+        try{
+            System.load(new File( configParams.getSystemParams().getOpenCvPath() ).getAbsolutePath() );
+        }catch (Exception ex){
+            logger.error("Bad OpenCV lib path" ,ex);
+        }
+
         logger.info("vacls.server module OK");
     }
 }

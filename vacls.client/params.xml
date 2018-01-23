@@ -1,7 +1,7 @@
 <VaclsClientParams>
     <ID>string</ID>
 
-    <OpenCVPath>string</OpenCVPath>
+    <OpenCVPath>libs/OpenCV/build/java/x64/opencv_java331.dll</OpenCVPath>
 
     <ServerParams>
         <serverURL>localhost</serverURL>

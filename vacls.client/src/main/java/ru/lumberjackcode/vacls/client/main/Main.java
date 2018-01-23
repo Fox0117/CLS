@@ -2,6 +2,8 @@ package ru.lumberjackcode.vacls.client.main;
 
 
 import org.apache.log4j.Logger;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import ru.lumberjackcode.vacls.client.applicationparams.VaclsClientParams;
 
 import javax.xml.bind.JAXBContext;
@@ -42,6 +44,12 @@ public class Main {
 
         VaclsClientParams params = root.getValue();
 
+        try{
+            System.load( new File( params.getOpenCVPath() ).getAbsolutePath() );
+        }catch (Exception ex){
+            log.error("Bad OpenCV lib path" ,ex);
+        }
+        Mat mat = new Mat();
         log.info("Main OK");
     }
 }
