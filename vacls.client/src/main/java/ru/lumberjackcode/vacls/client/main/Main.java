@@ -33,7 +33,6 @@ public class Main {
     public static void main(String[] args) throws Exception{
         log.info("Starting Vacls client app");
 
-        System.out.println("Hello, world!");
 
         if(args.length != 1){
             log.error("App takes 1 param: params.xml path");
@@ -49,7 +48,7 @@ public class Main {
         }catch (Exception ex){
             log.error("Bad OpenCV lib path" ,ex);
         }
-        Mat mat = new Mat();
+
         log.info("Main OK");
     }
 }
