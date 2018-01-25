@@ -6,6 +6,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import ru.lumberjackcode.vacls.client.applicationparams.VaclsClientParams;
 import ru.lumberjackcode.vacls.client.applicationparams.VideoParams;
+import ru.lumberjackcode.vacls.client.logicOnFrame.NewFrameProcessor;
 import ru.lumberjackcode.vacls.client.reactiveFramesPublisher.ReactiveFramesPublisher;
 
 import javax.xml.bind.JAXBContext;
@@ -58,6 +59,10 @@ public class Main {
                 videoParams.getFrameWidth(),
                 videoParams.getFrameHeight()
         );
+
+        NewFrameProcessor newFrameProcessor = new NewFrameProcessor(params);
+
+        reactiveFramesPublisher.getNewFrameHandlers().add(newFrameProcessor);
 
         Thread mainLogicThread = new Thread(reactiveFramesPublisher);
         mainLogicThread.start();
