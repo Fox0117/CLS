@@ -84,7 +84,9 @@ public class Imshow {
 			image.setImage(bufImage);
 			Window.pack();
 			label.updateUI();
-			Window.setVisible(true);
+			if(!Window.isVisible()){
+				Window.setVisible(true);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

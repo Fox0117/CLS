@@ -38,6 +38,7 @@
     <modules>
         <module>vacls.client</module>
         <module>vacls.server</module>
+        <module>vacls.transfere</module>
     </modules>
 
 
