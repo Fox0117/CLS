@@ -2,7 +2,6 @@ package ru.lumberjackcode.vacls.transfere;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.istack.internal.NotNull;
 import org.opencv.core.Mat;
 
 
@@ -20,7 +19,7 @@ public class ClientRequest {
 
     private long time;
 
-    public ClientRequest(@NotNull Mat[] frames, String id, String token){
+    public ClientRequest(Mat[] frames, String id, String token){
         frames64 = new Frame64[frames.length];
 
         for(int i = 0; i < frames.length; ++i) {
