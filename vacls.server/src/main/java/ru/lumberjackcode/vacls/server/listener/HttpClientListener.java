@@ -2,12 +2,12 @@ package ru.lumberjackcode.vacls.server.listener;
 
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.HttpServer;
-
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import com.sun.net.httpserver.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 public class HttpClientListener {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
@@ -17,70 +17,57 @@ public class HttpClientListener {
     private Queue<Thread> queuedThreads;
     private ArrayList<Thread> activeThreads;
 
-    public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath) {
+    public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath){
         this.portClient = portClient;
         this.maxThreadPoolNumber = maxThreadPoolNumber;
         this.openCVPath = openCVPath;
-        queuedThreads = new LinkedList<>();
-        activeThreads = new ArrayList<>(maxThreadPoolNumber);
-
-        //Creating server socket on clientPort
         logger.info("HttpClientListener starting on port: " + Integer.toString(portClient));
-        ServerSocket serverSocket = null;
+        com.sun.net.httpserver.HttpServer server;
         try {
-            serverSocket = new ServerSocket(portClient);
-            logger.info("HttpClientListener started");
+            server = com.sun.net.httpserver.HttpServer.create();
+            server.bind(new InetSocketAddress(portClient), 0);
         }
         catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
-        }
-
-        //Awaiting for requests
-        while (true) {
-            try {
-                Socket clientSocket = serverSocket.accept();
-                ClientSession session = new ClientSession(clientSocket);
-                queuedThreads.add(new Thread(session));
-                for (int i = 0; i < maxThreadPoolNumber && queuedThreads.peek() != null; ++i) {
-                    if (activeThreads.get(i) == null || !(activeThreads.get(i).isAlive())) {
-                        activeThreads.set(i, queuedThreads.poll());
-                        activeThreads.get(i).start();
-                    }
-                }
-            }
-            catch (IOException ex) {
-                logger.error("Interrupted connection");
-                logger.error(ex.getMessage(), ex);
-                break;
-            }
-        }
-
-        //Stopping listener and interrupt running sessions
-        logger.info("HttpClientListener stopping");
-        for (int i = 0; i < maxThreadPoolNumber; ++i) {
-            if (activeThreads.get(i) != null && activeThreads.get(i).isAlive()) {
-                activeThreads.get(i).interrupt();
-            }
-        }
-        logger.info("HttpClientListener stopped");
-    }
-
-    private static class ClientSession implements Runnable {
-        private Socket socket;
-        private InputStream input;
-        private OutputStream output;
-
-        public ClientSession(Socket socket) throws IOException {
-            this.socket = socket;
-            this.input = socket.getInputStream();
-            this.output = socket.getOutputStream();
-        }
-
-        @Override
-        public void run() {
             return;
         }
 
+        HttpContext context = server.createContext("/", new EchoHandler());
+        context.setAuthenticator(new Auth());
+        server.setExecutor(Executors.newFixedThreadPool(maxThreadPoolNumber));
+        logger.info("HttpClientListener started");
+        server.start();
+    }
 
+    static class EchoHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            StringBuilder builder = new StringBuilder();
+
+            builder.append("<h1>URI: ").append(exchange.getRequestURI()).append("</h1>");
+
+            Headers headers = exchange.getRequestHeaders();
+            for (String header : headers.keySet()) {
+                builder.append("<p>").append(header).append("=")
+                        .append(headers.getFirst(header)).append("</p>");
+            }
+
+            byte[] bytes = builder.toString().getBytes();
+            exchange.sendResponseHeaders(200, bytes.length);
+
+            OutputStream output = exchange.getResponseBody();
+            output.write(bytes);
+            output.close();
+        }
+    }
+
+    static class Auth extends Authenticator {
+        @Override
+        public Result authenticate(HttpExchange httpExchange) {
+            if ("/forbidden".equals(httpExchange.getRequestURI().toString()))
+                return new Failure(403);
+            else
+                return new Success(new HttpPrincipal("login", "password"));
+        }
     }
 }
