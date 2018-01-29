@@ -2,6 +2,7 @@ package ru.lumberjackcode.vacls.server;
 
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.applicationparams.VaclsServerParams;
+import ru.lumberjackcode.vacls.server.listener.HttpClientListener;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -9,6 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.util.Scanner;
 
 public class HttpServer {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
@@ -52,6 +54,9 @@ public class HttpServer {
             logger.error("Bad OpenCV lib path", ex);
         }
 
-        logger.info("vacls.server module OK");
+        HttpClientListener clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
+        clientListener.start();
+        Scanner input = new Scanner(System.in);
+        while (!input.next().equals("stop"));
     }
 }

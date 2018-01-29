@@ -2,8 +2,14 @@ package ru.lumberjackcode.vacls.server.listener;
 
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.HttpServer;
+import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
+import ru.lumberjackcode.vacls.transfere.*;
+
+import java.io.InputStream;
 import java.util.*;
 import com.sun.net.httpserver.*;
+import sun.net.www.protocol.http.HttpURLConnection;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -12,17 +18,13 @@ import java.util.concurrent.Executors;
 public class HttpClientListener {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
     private int portClient;
-    private int maxThreadPoolNumber;
     private String openCVPath;
-    private Queue<Thread> queuedThreads;
-    private ArrayList<Thread> activeThreads;
+    private com.sun.net.httpserver.HttpServer server;
 
     public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath){
         this.portClient = portClient;
-        this.maxThreadPoolNumber = maxThreadPoolNumber;
         this.openCVPath = openCVPath;
-        logger.info("HttpClientListener starting on port: " + Integer.toString(portClient));
-        com.sun.net.httpserver.HttpServer server;
+        logger.info("HttpClientListener binding on port: " + Integer.toString(this.portClient));
         try {
             server = com.sun.net.httpserver.HttpServer.create();
             server.bind(new InetSocketAddress(portClient), 0);
@@ -35,29 +37,60 @@ public class HttpClientListener {
         HttpContext context = server.createContext("/", new EchoHandler());
         context.setAuthenticator(new Auth());
         server.setExecutor(Executors.newFixedThreadPool(maxThreadPoolNumber));
-        logger.info("HttpClientListener started");
-        server.start();
     }
 
-    static class EchoHandler implements HttpHandler {
+    public void start() {
+        logger.info("HttpClientListener starting on port: " + Integer.toString(this.portClient));
+        try {
+            server.start();
+        }
+        catch (Exception ex) {
+            logger.error("Server was interrupted");
+            logger.error(ex.getMessage(), ex);
+        }
+    }
+
+    public void stop(int delay) {
+        logger.info("HttpClientListener stops");
+        try {
+            server.stop(delay);
+        }
+        catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+    }
+
+    public static class EchoHandler implements HttpHandler {
         @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            StringBuilder builder = new StringBuilder();
+        public void handle(HttpExchange exchange){
+            try {
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    logger.info("Processing POST request from client");
 
-            builder.append("<h1>URI: ").append(exchange.getRequestURI()).append("</h1>");
+                    //Get ClientRequest from JSON
+                    InputStream input = exchange.getRequestBody();
+                    byte[] jSonInputData = new byte[input.available()];
+                    input.read(jSonInputData);
+                    ClientRequest clientReq = ClientRequest.fromUtf8Json(jSonInputData);
 
-            Headers headers = exchange.getRequestHeaders();
-            for (String header : headers.keySet()) {
-                builder.append("<p>").append(header).append("=")
-                        .append(headers.getFirst(header)).append("</p>");
+                    //Process ClientRequest
+                    FaceAuthenticatior faceAuth = new FaceAuthenticatior();
+                    faceAuth.Authentificate(clientReq);
+
+                    //Send response to client
+                    ClientResponse clientResp = new ClientResponse(true, faceAuth.getMessage(), 0);
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    OutputStream output = exchange.getResponseBody();
+                    output.write(clientResp.getUtf8Json());
+                    output.flush();
+                    output.close();
+                    logger.info("Response on POST request was sent to client");
+                }
             }
-
-            byte[] bytes = builder.toString().getBytes();
-            exchange.sendResponseHeaders(200, bytes.length);
-
-            OutputStream output = exchange.getResponseBody();
-            output.write(bytes);
-            output.close();
+            catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+                return;
+            }
         }
     }
 
