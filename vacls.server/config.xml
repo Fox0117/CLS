@@ -4,7 +4,7 @@
     <portAdmin>5000</portAdmin>
   </ConnectionParams>
   <SystemParams>
-    <maxThreadPoolNumber>1</maxThreadPoolNumber>
-    <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java331.dll</OpenCvPath>
+    <maxThreadPoolNumber>4</maxThreadPoolNumber>
+    <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java331.so</OpenCvPath>
   </SystemParams>
 </VaclsServerParams>

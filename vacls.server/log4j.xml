@@ -20,13 +20,13 @@
     </appender>
 
     <logger name="ru.lumberjackcode" additivity="false">
-        <level value="DEBUG"/>
+        <level value="ALL"/>
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </logger>
 
     <root>
-        <level value="DEBUG"/>
+        <level value="ALL"/>
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </root>

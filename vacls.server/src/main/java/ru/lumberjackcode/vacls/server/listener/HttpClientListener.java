@@ -3,7 +3,7 @@ package ru.lumberjackcode.vacls.server.listener;
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.HttpServer;
 import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
-import ru.lumberjackcode.vacls.transfere.*;
+//import ru.lumberjackcode.vacls.transfere.*;
 
 import java.io.InputStream;
 import java.util.*;
@@ -13,6 +13,7 @@ import sun.net.www.protocol.http.HttpURLConnection;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class HttpClientListener {
@@ -20,6 +21,7 @@ public class HttpClientListener {
     private int portClient;
     private String openCVPath;
     private com.sun.net.httpserver.HttpServer server;
+    private ExecutorService httpThreadPool;
 
     public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath){
         this.portClient = portClient;
@@ -35,8 +37,9 @@ public class HttpClientListener {
         }
 
         HttpContext context = server.createContext("/", new EchoHandler());
-        context.setAuthenticator(new Auth());
-        server.setExecutor(Executors.newFixedThreadPool(maxThreadPoolNumber));
+        //context.setAuthenticator(new Auth());
+        httpThreadPool = Executors.newFixedThreadPool(maxThreadPoolNumber);
+        server.setExecutor(httpThreadPool);
     }
 
     public void start() {
@@ -50,10 +53,11 @@ public class HttpClientListener {
         }
     }
 
-    public void stop(int delay) {
-        logger.info("HttpClientListener stops");
+    public void stop() {
+        logger.info("HttpClientListener stops\n\n");
         try {
-            server.stop(delay);
+            server.stop(1);
+            httpThreadPool.shutdownNow();
         }
         catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -63,6 +67,7 @@ public class HttpClientListener {
     public static class EchoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange){
+            logger.info("Connection established");
             try {
                 if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     logger.info("Processing POST request from client");
@@ -71,21 +76,33 @@ public class HttpClientListener {
                     InputStream input = exchange.getRequestBody();
                     byte[] jSonInputData = new byte[input.available()];
                     input.read(jSonInputData);
-                    ClientRequest clientReq = ClientRequest.fromUtf8Json(jSonInputData);
+                    //ClientRequest clientReq = ClientRequest.fromUtf8Json(jSonInputData);
 
                     //Process ClientRequest
                     FaceAuthenticatior faceAuth = new FaceAuthenticatior();
-                    faceAuth.Authentificate(clientReq);
+                    //faceAuth.Authentificate(clientReq);
 
                     //Send response to client
-                    ClientResponse clientResp = new ClientResponse(true, faceAuth.getMessage(), 0);
+                    //ClientResponse clientResp = new ClientResponse(true, faceAuth.getMessage(), 0);
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                     OutputStream output = exchange.getResponseBody();
-                    output.write(clientResp.getUtf8Json());
+                    //output.write(clientResp.getUtf8Json());
+                    output.write(faceAuth.getMessage().getBytes());
                     output.flush();
                     output.close();
                     logger.info("Response on POST request was sent to client");
                 }
+                else if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    OutputStream output = exchange.getResponseBody();
+                    output.write("<h1>Server is online</h1>".getBytes());
+                    output.flush();
+                    output.close();
+                }
+                else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+                }
+
             }
             catch (IOException ex) {
                 logger.error(ex.getMessage(), ex);
