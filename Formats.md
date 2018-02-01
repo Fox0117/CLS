@@ -8,7 +8,9 @@ no parameters
 
 ```javascript
 {
-    "minimum_date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive) // returns minimum date for user requests
+    "status": "OK", // or "Error"
+    "error_message": "Some message", // only if status == Error
+    "minimum_date": "01.02.2018 17:06", // "dd.mm.yyyy HH:MM" (inclusive) // returns minimum date for user requests
     "maximum_date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive) // returns maximum date for user requests
 }
 ```
