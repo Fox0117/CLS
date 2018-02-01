@@ -6,7 +6,6 @@
       xmlns:pages="clr-namespace:AdminClient.Code.ViewModels.Pages"
       xmlns:chart="http://schemas.syncfusion.com/wpf"
       xmlns:localizations="clr-namespace:AdminClient.Resources.Localizations"
-      xmlns:fa="http://schemas.fontawesome.io/icons/"
       xmlns:controls="clr-namespace:AdminClient.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="500"
@@ -113,37 +112,6 @@
                         </chart:ChartAdornmentInfo>
                     </chart:FastLineSeries.AdornmentsInfo>
                 </chart:FastLineSeries>
-
-                <!--<chart:AreaSeries x:Name="AreaSeries" EnableAnimation="True"
-                              XBindingPath="Date" 
-                              Label="Favourite Fruits"
-                              YBindingPath="Count" 
-                              ItemsSource="{Binding ChartItems}" 
-                              ShowTooltip="True"
-                              Stroke="#FF1BA1E2"
-                              Interior="#AA94D3F1">
-                    <chart:AreaSeries.AdornmentsInfo>
-                        <chart:ChartAdornmentInfo AdornmentsPosition="Bottom"  
-                                              HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center" 
-                                              ShowLabel="True">
-                            <chart:ChartAdornmentInfo.LabelTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Ellipse Height="27" Width="27" 
-                                             Stroke="#FF1BA1E2" Fill="White" 
-                                             StrokeThickness="2" 
-                                             HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding}" Foreground="Black" 
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontFamily="Segoe UI"  FontSize="12"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </chart:ChartAdornmentInfo.LabelTemplate>
-                        </chart:ChartAdornmentInfo>
-                    </chart:AreaSeries.AdornmentsInfo>
-                </chart:AreaSeries>-->
 
             </chart:SfChart>
 
