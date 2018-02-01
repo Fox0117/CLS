@@ -1,0 +1,63 @@
+﻿<Page x:Class="AdminClient.Pages.ChartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:pages="clr-namespace:AdminClient.Code.ViewModels.Pages"
+      xmlns:chart="http://schemas.syncfusion.com/wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="ChartPage"
+      
+      d:DataContext="{d:DesignInstance pages:ChartPageViewModel}">
+
+    <Grid Margin="5">
+        <chart:SfChart Margin="0,5">
+
+            <chart:SfChart.Header>
+                <TextBlock FontSize="24" FontFamily="Segoe UI" Foreground="Black"
+                           Margin="0,0,0,20">Количество уникальных людей</TextBlock>
+            </chart:SfChart.Header>
+
+            <chart:SfChart.PrimaryAxis>
+                <chart:DateTimeAxis
+                    PlotOffset="30"/>
+            </chart:SfChart.PrimaryAxis>
+            
+            <chart:SfChart.SecondaryAxis>
+                <chart:NumericalAxis
+                    Maximum="{Binding VerticalAxisMaximum.Value, Mode=OneWay}"/>
+            </chart:SfChart.SecondaryAxis>
+
+            <chart:AreaSeries x:Name="AreaSeries" EnableAnimation="True"
+                              XBindingPath="Date" 
+                              Label="Favourite Fruits"
+                              YBindingPath="Count" 
+                              ItemsSource="{Binding ChartItems}" 
+                              ShowTooltip="True" >
+                <chart:AreaSeries.AdornmentsInfo>
+                    <chart:ChartAdornmentInfo AdornmentsPosition="Bottom"  
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center" 
+                                              ShowLabel="True">
+                        <chart:ChartAdornmentInfo.LabelTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Ellipse Height="27" Width="27" 
+                                             Stroke="#FF1BA1E2" Fill="White" 
+                                             StrokeThickness="2" 
+                                             HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding}" Foreground="Black" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center" 
+                                               FontFamily="Segoe UI"  FontSize="12"/>
+                                </Grid>
+                            </DataTemplate>
+                        </chart:ChartAdornmentInfo.LabelTemplate>
+                    </chart:ChartAdornmentInfo>
+                </chart:AreaSeries.AdornmentsInfo>
+            </chart:AreaSeries>
+
+        </chart:SfChart>
+    </Grid>
+</Page>

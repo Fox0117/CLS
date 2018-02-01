@@ -1,0 +1,38 @@
+﻿<Window x:Class="AdminClient.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:localizations="clr-namespace:AdminClient.Resources.Localizations"
+        xmlns:windows="clr-namespace:AdminClient.Code.ViewModels.Windows"
+        xmlns:controls="clr-namespace:AdminClient.Controls"
+        mc:Ignorable="d"
+        Title="{x:Static localizations:StringResources.AdminWindow_Title}"
+        Height="500" Width="700"
+        WindowStartupLocation="CenterScreen"
+        
+        d:DataContext="{d:DesignInstance windows:AdminWindowViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#1E1E1E">
+
+            <StackPanel>
+                <controls:LeftMenuItem
+                    Title="Test 1"
+                    ClickCommand="{Binding LeftMenuClickCommand}"
+                    ClickCommandParameter="../Pages/ChartPage.xaml"/>
+            </StackPanel>
+
+        </ScrollViewer>
+
+        <Frame
+            Grid.Column="1"
+            Margin="5,0,0,0"
+            Source="{Binding CurrentPageUri, Mode=OneWay}"/>
+
+    </Grid>
+</Window>
