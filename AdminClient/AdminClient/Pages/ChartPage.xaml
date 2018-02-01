@@ -5,59 +5,195 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:pages="clr-namespace:AdminClient.Code.ViewModels.Pages"
       xmlns:chart="http://schemas.syncfusion.com/wpf"
+      xmlns:localizations="clr-namespace:AdminClient.Resources.Localizations"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      xmlns:controls="clr-namespace:AdminClient.Controls"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
+      d:DesignHeight="500"
+      d:DesignWidth="700"
       Title="ChartPage"
+      FontSize="14"
+
+      d:DataContext="{d:DesignInstance pages:ChartPageViewModel}"
       
-      d:DataContext="{d:DesignInstance pages:ChartPageViewModel}">
+      Loaded="ChartPage_OnLoaded">
+    
+    <Page.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="7,3"/>
+        </Style>
+    </Page.Resources>
+    
+    <Page.InputBindings>
+        <KeyBinding Modifiers="Control" Key="R" Command="{Binding ProcessRangeCommand}"/>
+    </Page.InputBindings>
 
     <Grid Margin="5">
-        <chart:SfChart Margin="0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <chart:SfChart.Header>
-                <TextBlock FontSize="24" FontFamily="Segoe UI" Foreground="Black"
+        <Grid>
+            <chart:SfChart
+                x:Name="Chart"
+                Margin="0,5"
+                IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}">
+
+                <chart:SfChart.Behaviors>
+                    <chart:ChartTrackBallBehavior>
+                        <chart:ChartTrackBallBehavior.ChartTrackBallStyle>
+                            <Style TargetType="chart:ChartTrackBallControl">
+                                <Setter Property="Background" Value="OrangeRed"/>
+                                <Setter Property="Margin" Value="2,2,0,0"/>
+                                <Setter Property="StrokeThickness" Value="0"/>
+                            </Style>
+                        </chart:ChartTrackBallBehavior.ChartTrackBallStyle>
+                        
+                        <chart:ChartTrackBallBehavior.LineStyle>
+                            <Style TargetType="Line">
+                                <Setter Property="Stroke" Value="OrangeRed"/>
+                                <Setter Property="StrokeDashArray" Value="8,5,2,5"/>
+                                <Setter Property="Margin" Value="1,0,0,0"/>
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Setter Property="StrokeDashCap" Value="Round"></Setter>
+                            </Style>
+                        </chart:ChartTrackBallBehavior.LineStyle>
+                    </chart:ChartTrackBallBehavior>
+                    
+                    <chart:ChartZoomPanBehavior EnableZoomingToolBar="True"/>
+                </chart:SfChart.Behaviors>
+
+                <chart:SfChart.Style>
+                    <Style TargetType="chart:SfChart">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsBusy, Mode=OneWay}" Value="True">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </chart:SfChart.Style>
+
+                <chart:SfChart.Header>
+                    <TextBlock FontSize="24" FontFamily="Segoe UI" Foreground="Black"
                            Margin="0,0,0,20">Количество уникальных людей</TextBlock>
-            </chart:SfChart.Header>
+                </chart:SfChart.Header>
 
-            <chart:SfChart.PrimaryAxis>
-                <chart:DateTimeAxis
-                    PlotOffset="30"/>
-            </chart:SfChart.PrimaryAxis>
-            
-            <chart:SfChart.SecondaryAxis>
-                <chart:NumericalAxis
-                    Maximum="{Binding VerticalAxisMaximum.Value, Mode=OneWay}"/>
-            </chart:SfChart.SecondaryAxis>
+                <chart:SfChart.PrimaryAxis>
+                    <chart:DateTimeAxis
+                        PlotOffset="30"
+                        ShowTrackBallInfo="True"/>
+                </chart:SfChart.PrimaryAxis>
 
-            <chart:AreaSeries x:Name="AreaSeries" EnableAnimation="True"
+                <chart:SfChart.SecondaryAxis>
+                    <chart:NumericalAxis
+                        Minimum="0"
+                        Maximum="{Binding VerticalAxisMaximum.Value, Mode=OneWay}"/>
+                </chart:SfChart.SecondaryAxis>
+
+                <chart:FastLineSeries
+                    EnableAnimation="True" 
+                    XBindingPath="Date" 
+                    YBindingPath="Count"
+                    ItemsSource="{Binding ChartItems}" 
+                    ShowTooltip="True">
+                    <chart:FastLineSeries.AdornmentsInfo>
+                        <chart:ChartAdornmentInfo Symbol="Custom" ShowMarker="True" >
+                            <chart:ChartAdornmentInfo.SymbolTemplate>
+                                <DataTemplate>
+                                    <Ellipse IsHitTestVisible="False" Fill="#FF1BA1E2" Height="18" Width="18"
+                                                 StrokeThickness="3" Stroke="White"/>
+                                </DataTemplate>
+                            </chart:ChartAdornmentInfo.SymbolTemplate>
+                        </chart:ChartAdornmentInfo>
+                    </chart:FastLineSeries.AdornmentsInfo>
+                </chart:FastLineSeries>
+
+                <!--<chart:AreaSeries x:Name="AreaSeries" EnableAnimation="True"
                               XBindingPath="Date" 
                               Label="Favourite Fruits"
                               YBindingPath="Count" 
                               ItemsSource="{Binding ChartItems}" 
-                              ShowTooltip="True" >
-                <chart:AreaSeries.AdornmentsInfo>
-                    <chart:ChartAdornmentInfo AdornmentsPosition="Bottom"  
+                              ShowTooltip="True"
+                              Stroke="#FF1BA1E2"
+                              Interior="#AA94D3F1">
+                    <chart:AreaSeries.AdornmentsInfo>
+                        <chart:ChartAdornmentInfo AdornmentsPosition="Bottom"  
                                               HorizontalAlignment="Center" 
                                               VerticalAlignment="Center" 
                                               ShowLabel="True">
-                        <chart:ChartAdornmentInfo.LabelTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Ellipse Height="27" Width="27" 
+                            <chart:ChartAdornmentInfo.LabelTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Ellipse Height="27" Width="27" 
                                              Stroke="#FF1BA1E2" Fill="White" 
                                              StrokeThickness="2" 
                                              HorizontalAlignment="Center"/>
-                                    <TextBlock Text="{Binding}" Foreground="Black" 
+                                        <TextBlock Text="{Binding}" Foreground="Black" 
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center" 
                                                FontFamily="Segoe UI"  FontSize="12"/>
-                                </Grid>
-                            </DataTemplate>
-                        </chart:ChartAdornmentInfo.LabelTemplate>
-                    </chart:ChartAdornmentInfo>
-                </chart:AreaSeries.AdornmentsInfo>
-            </chart:AreaSeries>
+                                    </Grid>
+                                </DataTemplate>
+                            </chart:ChartAdornmentInfo.LabelTemplate>
+                        </chart:ChartAdornmentInfo>
+                    </chart:AreaSeries.AdornmentsInfo>
+                </chart:AreaSeries>-->
 
-        </chart:SfChart>
+            </chart:SfChart>
+
+            <controls:BusyControl IsBusy="{Binding IsBusy, Mode=OneWay}"/>
+        </Grid>
+
+        <WrapPanel Grid.Row="1" Orientation="Horizontal">
+            <WrapPanel.Resources>
+                <Style TargetType="chart:DateTimeEdit">
+                    <Setter Property="chart:SkinStorage.VisualStyle" Value="Metro"/>
+                </Style>
+            </WrapPanel.Resources>
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
+                <TextBlock
+                    Text="{x:Static localizations:StringResources.StartDate_Label}"/>
+
+                <chart:DateTimeEdit
+                    Margin="5,0,0,0"
+                    EnableClassicStyle="True"
+                    EnableMouseWheelEdit="True"
+                    IsVisibleRepeatButton="True"
+                    Pattern="FullDateTime"
+                    IsCalendarEnabled="True"
+                    IsWatchEnabled="True"
+                    Height="36"
+                    IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <TextBlock
+                    Text="{x:Static localizations:StringResources.EndDate_Label}"/>
+
+                <chart:DateTimeEdit
+                    Margin="5,0,0,0"
+                    EnableClassicStyle="True"
+                    EnableMouseWheelEdit="True"
+                    IsVisibleRepeatButton="True"
+                    Pattern="FullDateTime"
+                    IsCalendarEnabled="True"
+                    IsWatchEnabled="True"
+                    IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"/>
+            </StackPanel>
+        </WrapPanel>
+
+        <StackPanel Grid.Row="2" Margin="0,5,0,0" Orientation="Horizontal">
+            <Button
+                Content="{x:Static localizations:StringResources.ProcessRange_Conent}"
+                Command="{Binding ProcessRangeCommand}"/>
+        </StackPanel>
+
     </Grid>
 </Page>

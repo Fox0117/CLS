@@ -11,12 +11,12 @@
     <UserControl.Resources>
         <Storyboard x:Key="MouseEnterHover">
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="Control">
-                <EasingColorKeyFrame KeyTime="0:0:0.3" Value="#FF5D5D5D"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FF5D5D5D"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="MouseLeftHover">
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="Control">
-                <EasingColorKeyFrame KeyTime="0:0:0.4" Value="#1E1E1E"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#1E1E1E"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
@@ -28,15 +28,24 @@
             <BeginStoryboard x:Name="MouseLeftHover_BeginStoryboard" Storyboard="{StaticResource MouseLeftHover}"/>
         </EventTrigger>
     </UserControl.Triggers>
+   
 
     <Grid
         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:LeftMenuItem}}"
-        MouseUp="UIElement_OnMouseUp">
+        Background="Transparent"
+        MouseLeftButtonUp="UIElement_OnLeftMouseUp">
+
+        <Border
+            Background="DodgerBlue"
+            HorizontalAlignment="Left"
+            Width="7" Height="25"
+            Visibility="{Binding IsSelected, Mode=OneWay, Converter={StaticResource TrueToVisibleConverter}}"/>
+
         <TextBlock
             Text="{Binding Title, Mode=OneWay, FallbackValue=test}"
             FontFamily="Century Gothic" FontSize="19"
             VerticalAlignment="Center"
-            Margin="30,10"
+            Margin="40,10"
             Foreground="WhiteSmoke"/>
     </Grid>
 </UserControl>

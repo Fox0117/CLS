@@ -1,4 +1,6 @@
-﻿using AdminClient.Code.ViewModels.Windows;
+﻿using System.Windows.Controls;
+using System.Windows.Navigation;
+using AdminClient.Code.ViewModels.Windows;
 
 namespace AdminClient.Windows
 {
@@ -15,6 +17,11 @@ namespace AdminClient.Windows
         {
             get => DataContext as AdminWindowViewModel;
             private set => DataContext = value;
+        }
+
+        private void Frame_OnNavigated(object sender, NavigationEventArgs e)
+        {
+            (sender as Frame).NavigationService.RemoveBackEntry();
         }
     }
 }

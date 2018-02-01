@@ -1,4 +1,5 @@
-﻿using AdminClient.Code.ViewModels.Pages;
+﻿using System.Windows;
+using AdminClient.Code.ViewModels.Pages;
 
 namespace AdminClient.Pages
 {
@@ -15,6 +16,15 @@ namespace AdminClient.Pages
         {
             get => DataContext as ChartPageViewModel;
             set => DataContext = value;
+        }
+
+        private async void ChartPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.LoadItems();
+
+            //await ViewModel.LoadItems();
+
+            //Chart.Series[0].ref
         }
     }
 }

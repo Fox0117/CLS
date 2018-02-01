@@ -8,8 +8,10 @@
         xmlns:controls="clr-namespace:AdminClient.Controls"
         mc:Ignorable="d"
         Title="{x:Static localizations:StringResources.AdminWindow_Title}"
-        Height="500" Width="700"
+        MinHeight="500" MinWidth="700"
+        Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
         
         d:DataContext="{d:DesignInstance windows:AdminWindowViewModel}">
     <Grid>
@@ -20,19 +22,27 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#1E1E1E">
 
-            <StackPanel>
-                <controls:LeftMenuItem
-                    Title="Test 1"
-                    ClickCommand="{Binding LeftMenuClickCommand}"
-                    ClickCommandParameter="../Pages/ChartPage.xaml"/>
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding LeftMenuItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:LeftMenuItem
+                            Title="{Binding Title, Mode=OneWay}"
+                            IsSelected="{Binding IsSelected, Mode=OneWay}"
+                            ClickCommand="{Binding DataContext.LeftMenuClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                            ClickCommandParameter="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
         </ScrollViewer>
 
         <Frame
             Grid.Column="1"
             Margin="5,0,0,0"
-            Source="{Binding CurrentPageUri, Mode=OneWay}"/>
+            NavigationUIVisibility="Hidden"
+            Navigated="Frame_OnNavigated"
+            
+            Source="{Binding SelectedPage.PageUri, Mode=OneWay}"/>
 
     </Grid>
 </Window>

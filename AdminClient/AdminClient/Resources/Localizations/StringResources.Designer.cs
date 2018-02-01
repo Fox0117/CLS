@@ -68,5 +68,41 @@ namespace AdminClient.Resources.Localizations {
                 return ResourceManager.GetString("AdminWindow_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конечная дата:.
+        /// </summary>
+        public static string EndDate_Label {
+            get {
+                return ResourceManager.GetString("EndDate_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обновить.
+        /// </summary>
+        public static string ProcessRange_Conent {
+            get {
+                return ResourceManager.GetString("ProcessRange_Conent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить.
+        /// </summary>
+        public static string SendScript_Content {
+            get {
+                return ResourceManager.GetString("SendScript_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начальная дата:.
+        /// </summary>
+        public static string StartDate_Label {
+            get {
+                return ResourceManager.GetString("StartDate_Label", resourceCulture);
+            }
+        }
     }
 }

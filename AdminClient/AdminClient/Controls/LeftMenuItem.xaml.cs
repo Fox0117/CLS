@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -35,12 +34,21 @@ namespace AdminClient.Controls
         }
 
         public static readonly DependencyProperty ClickCommandParameterProperty = DependencyProperty.Register(
-            "ClickCommandParameter", typeof(Uri), typeof(LeftMenuItem), new PropertyMetadata(default(Uri)));
+            "ClickCommandParameter", typeof(object), typeof(LeftMenuItem), new PropertyMetadata(default));
 
-        public Uri ClickCommandParameter
+        public object ClickCommandParameter
         {
-            get => (Uri) GetValue(ClickCommandParameterProperty);
+            get => GetValue(ClickCommandParameterProperty);
             set => SetValue(ClickCommandParameterProperty, value);
+        }
+
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+            "IsSelected", typeof(bool), typeof(LeftMenuItem), new PropertyMetadata(default(bool)));
+
+        public bool IsSelected
+        {
+            get => (bool) GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
         }
 
         public LeftMenuItem()
@@ -48,7 +56,7 @@ namespace AdminClient.Controls
             InitializeComponent();
         }
 
-        private void UIElement_OnMouseUp(object sender, MouseButtonEventArgs e)
+        private void UIElement_OnLeftMouseUp(object sender, MouseButtonEventArgs e)
         {
             ClickCommand?.Execute(ClickCommandParameter);
         }
