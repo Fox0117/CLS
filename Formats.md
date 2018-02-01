@@ -2,7 +2,7 @@
 
 ```
 startDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
-endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (invlusive)
+endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 ```
 
 ## Users response format
