@@ -1,8 +1,8 @@
 ## Users request format
 
 ```
-startDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM"
-endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM"
+startDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
+endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (invlusive)
 ```
 
 ## Users response format
