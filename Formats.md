@@ -1,10 +1,10 @@
-## Users range request
+## Entriese range request
 
 ```
 no parameters
 ```
 
-## Users range response
+## Entries range response
 
 ```javascript
 {
@@ -15,14 +15,14 @@ no parameters
 }
 ```
 
-## Users request
+## Entries request
 
 ```
 startDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 ```
 
-## Users response
+## Entries response
 
 ```javascript
 {
