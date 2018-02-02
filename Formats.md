@@ -8,8 +8,8 @@ no parameters
 
 ```javascript
 {
-    "status": "OK", // or "Error"
-    "error_message": "Some message", // only if status == Error
+    "status": "200", // or not "200" if error
+    "error_message": "Some message", // only if status != Error
     "minimum_date": "01.02.2018 17:06", // "dd.mm.yyyy HH:MM" (inclusive) // returns minimum date for user requests
     "maximum_date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive) // returns maximum date for user requests
 }
