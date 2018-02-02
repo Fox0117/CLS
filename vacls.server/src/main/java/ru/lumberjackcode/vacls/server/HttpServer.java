@@ -47,17 +47,17 @@ public class HttpServer {
         }
 
         // Loading OpenCV lib
-        /*try{
+        try{
             System.load(new File( configParams.getSystemParams().getOpenCvPath() ).getAbsolutePath() );
         }
         catch (Exception ex) {
             logger.error("Bad OpenCV lib path", ex);
-        }*/
+        }
 
         HttpClientListener clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
         clientListener.start();
         Scanner input = new Scanner(System.in);
-        while (!input.next().equals("stop"));
+        for(; !input.next().equals("stop"););
         clientListener.stop();
     }
 }

@@ -1,10 +1,11 @@
 package ru.lumberjackcode.vacls.server.authentication;
 
-//import org.opencv.core.Mat;
-//import ru.lumberjackcode.vacls.transfere.ClientRequest;
+import ru.lumberjackcode.vacls.transfere.*;
 
 public class FaceAuthenticatior {
     public FaceAuthenticatior () {}
-    //public boolean Authentificate(ClientRequest clientRequest) { return false; }
-    public String getMessage() { return "Empty"; }
+
+    public ClientResponse Authentificate(ClientRequest clientRequest) {
+        return new ClientResponse(false, "Default message", 0);
+    }
 }

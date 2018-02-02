@@ -1,15 +1,13 @@
 package ru.lumberjackcode.vacls.server.listener;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.HttpServer;
 import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
-//import ru.lumberjackcode.vacls.transfere.*;
-
+import ru.lumberjackcode.vacls.transfere.*;
 import java.io.InputStream;
-import java.util.*;
 import com.sun.net.httpserver.*;
 import sun.net.www.protocol.http.HttpURLConnection;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -67,51 +65,77 @@ public class HttpClientListener {
     public static class EchoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange){
-            logger.info("Connection established");
+            logger.info("Establishing session...");
             try {
-                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                //Online status check
+                if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                    try {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                        OutputStream output = exchange.getResponseBody();
+                        output.write("<h1>Server is online</h1>".getBytes());
+                        output.flush();
+                        output.close();
+                    }
+                    catch (IOException ex) {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                        logger.error(ex.getMessage(), ex);
+                    }
+                }
+                //Main request
+                else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     logger.info("Processing POST request from client");
+                    InputStream input;
+                    byte[] jSonInputData;
+                    ClientRequest clientReq;
+                    FaceAuthenticatior faceAuth;
 
-                    //Get ClientRequest from JSON
-                    InputStream input = exchange.getRequestBody();
-                    byte[] jSonInputData = new byte[input.available()];
-                    input.read(jSonInputData);
-                    //ClientRequest clientReq = ClientRequest.fromUtf8Json(jSonInputData);
+                    //Get data from request;
+                    try {
+                        input = exchange.getRequestBody();
+                        jSonInputData = IOUtils.toByteArray(input);
+                        clientReq = ClientRequest.fromUtf8Json(jSonInputData);
+                    }
+                    catch (Exception ex) {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                        exchange.close();
+                        logger.error(ex.getMessage(), ex);
+                        return;
+                    }
 
-                    //Process ClientRequest
-                    FaceAuthenticatior faceAuth = new FaceAuthenticatior();
-                    //faceAuth.Authentificate(clientReq);
-
-                    //Send response to client
-                    //ClientResponse clientResp = new ClientResponse(true, faceAuth.getMessage(), 0);
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream output = exchange.getResponseBody();
-                    //output.write(clientResp.getUtf8Json());
-                    output.write(faceAuth.getMessage().getBytes());
-                    output.flush();
-                    output.close();
-                    logger.info("Response on POST request was sent to client");
+                    try {
+                        //Process ClientRequest
+                        faceAuth = new FaceAuthenticatior();
+                        ClientResponse clientResp = faceAuth.Authentificate(clientReq);
+                        //Send response to client
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                        OutputStream output = exchange.getResponseBody();
+                        output.write(clientResp.getUtf8Json());
+                        output.flush();
+                        output.close();
+                    }
+                    catch (Exception ex) {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                        exchange.close();
+                        logger.error(ex.getMessage(), ex);
+                        return;
+                    }
+                    logger.info("POST request from client processed");
                 }
-                else if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream output = exchange.getResponseBody();
-                    output.write("<h1>Server is online</h1>".getBytes());
-                    output.flush();
-                    output.close();
-                }
+                //Different types of request
                 else {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+                    exchange.close();
+                    return;
                 }
-
             }
-            catch (IOException ex) {
+            catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
                 return;
             }
         }
     }
 
-    static class Auth extends Authenticator {
+    /*static class Auth extends Authenticator {
         @Override
         public Result authenticate(HttpExchange httpExchange) {
             if ("/forbidden".equals(httpExchange.getRequestURI().toString()))
@@ -119,5 +143,5 @@ public class HttpClientListener {
             else
                 return new Success(new HttpPrincipal("login", "password"));
         }
-    }
+    }*/
 }
