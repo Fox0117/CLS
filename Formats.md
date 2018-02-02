@@ -1,4 +1,4 @@
-## Entriese range request
+## Entries range request
 
 ```
 no parameters
