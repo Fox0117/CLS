@@ -28,7 +28,7 @@ endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 {
     "status": "OK", // or "Error"
     "error_message": "Some message", // only if status == Error
-    "items": [
+    "entries": [
         {
             "identifier": "1454Xgf32", // some unique string
             "date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM"
