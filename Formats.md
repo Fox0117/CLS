@@ -52,7 +52,7 @@ no parameters
 {
     "status": "OK", // or "Error"
     "error_message": "Some message", // only if status == Error
-    "text": "function () { return \"Test message\" }" // current script
+    "script": "function () { return \"Test message\" }" // current script
 }
 ```
 
