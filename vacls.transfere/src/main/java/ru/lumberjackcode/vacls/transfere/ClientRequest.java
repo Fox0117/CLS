@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.time.Clock;
 import java.util.Base64;
 
-public class ClientRequest {
+public class ClientRequest implements IResponse{
 
     private Frame64[] frames64;
 
@@ -39,11 +39,6 @@ public class ClientRequest {
         this.token = token;
         this.time = Clock.systemUTC().millis();
 
-    }
-
-    public byte[] getUtf8Json(){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this).getBytes(Charset.forName("UTF-8"));
     }
 
     public static ClientRequest fromUtf8Json(byte[] json){

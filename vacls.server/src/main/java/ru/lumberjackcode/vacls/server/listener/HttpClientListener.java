@@ -2,12 +2,15 @@ package ru.lumberjackcode.vacls.server.listener;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
 import ru.lumberjackcode.vacls.server.HttpServer;
 import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
 import ru.lumberjackcode.vacls.transfere.*;
-import java.io.InputStream;
+
 import com.sun.net.httpserver.*;
 import sun.net.www.protocol.http.HttpURLConnection;
+
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -72,7 +75,7 @@ public class HttpClientListener {
                     try {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         OutputStream output = exchange.getResponseBody();
-                        output.write("<h1>Server is online</h1>".getBytes());
+                        output.write("<h1>Client server is online</h1>".getBytes());
                         output.flush();
                         output.close();
                     }

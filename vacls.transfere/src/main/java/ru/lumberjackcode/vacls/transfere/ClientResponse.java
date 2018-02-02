@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.nio.charset.Charset;
 
-public class ClientResponse {
+public class ClientResponse implements IResponse{
     private String message;
 
     private int error;
@@ -16,11 +16,6 @@ public class ClientResponse {
         this.needToBeShown = needToBeShown;
         this.message = message;
         this.error = error;
-    }
-
-    public byte[] getUtf8Json(){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this).getBytes(Charset.forName("UTF-8"));
     }
 
     public static ClientResponse fromUtf8Json(byte[] json){
