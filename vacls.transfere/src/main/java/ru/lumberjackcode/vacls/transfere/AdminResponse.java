@@ -9,25 +9,28 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+@SuppressWarnings("all")
 
 public class AdminResponse {
 
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return formatter;
+    }
+
     public static class EntriesRange implements IResponse{
-        private String status;
         private String error_message;
         private String minimum_date, maximum_date;
 
         public EntriesRange() {
-            status = "OK";
             error_message = "";
             minimum_date = "00.00.0000 00:00";
             maximum_date = "00.00.0000 00:00";
         }
 
-        public EntriesRange(String status, String error_message, LocalDateTime minDate, LocalDateTime maxDate) {
-            this.status = status;
+        public EntriesRange(String error_message, LocalDateTime minDate, LocalDateTime maxDate) {
             this.error_message = error_message;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             minimum_date = minDate.format(formatter);
             maximum_date = maxDate.format(formatter);
         }
@@ -35,10 +38,6 @@ public class AdminResponse {
         public static EntriesRange fromUtf8Json(byte[] json){
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(new String(json, Charset.forName("UTF-8")), EntriesRange.class);
-        }
-
-        public String getStatus() {
-            return status;
         }
 
         public String getError_message() {
@@ -65,7 +64,6 @@ public class AdminResponse {
 
         public Entry(String identifier, LocalDate date) {
             this.identifier = identifier;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             this.date = date.format(formatter);
         }
 
@@ -84,18 +82,15 @@ public class AdminResponse {
     }
 
     public static class Entries implements IResponse{
-        private String status;
         private String error_message;
         private  List<Entry> entries;
 
         public Entries() {
-            status = "OK";
             error_message = "";
             entries = new LinkedList<>();
         }
 
-        public Entries(String status, String error_message) {
-            this.status = status;
+        public Entries(String error_message) {
             this.error_message = error_message;
             entries = new LinkedList<>();
         }
@@ -109,28 +104,21 @@ public class AdminResponse {
             entries.add(entry);
         }
 
-        public String getStatus() {
-            return status;
-        }
-
         public String getError_message() {
             return error_message;
         }
     }
 
     public static class JSDownload implements IResponse {
-        private String status;
         private String error_message;
         private String script;
 
         public JSDownload() {
-            status = "OK";
             error_message = "";
             script = "function () { return \"Test message\" }";
         }
 
-        public JSDownload(String status, String error_message, String script) {
-            this.status = status;
+        public JSDownload(String error_message, String script) {
             this.error_message = error_message;
             this.script = script;
         }
@@ -138,10 +126,6 @@ public class AdminResponse {
         public static JSDownload fromUtf8Json(byte[] json){
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.fromJson(new String(json, Charset.forName("UTF-8")), JSDownload.class);
-        }
-
-        public String getStatus() {
-            return status;
         }
 
         public String getError_message() {

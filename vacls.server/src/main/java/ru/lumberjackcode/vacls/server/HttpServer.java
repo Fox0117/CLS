@@ -2,6 +2,7 @@ package ru.lumberjackcode.vacls.server;
 
 import org.apache.log4j.Logger;
 import ru.lumberjackcode.vacls.server.applicationparams.VaclsServerParams;
+import ru.lumberjackcode.vacls.server.listener.HttpAdminListener;
 import ru.lumberjackcode.vacls.server.listener.HttpClientListener;
 
 import javax.xml.bind.JAXBContext;
@@ -54,10 +55,30 @@ public class HttpServer {
             logger.error("Bad OpenCV lib path", ex);
         }
 
-        HttpClientListener clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
-        clientListener.start();
+        HttpClientListener clientListener=null;
+        HttpAdminListener adminListener=null;
+        try {
+            clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
+            adminListener = new HttpAdminListener(configParams.getConnectionParams().getPortAdmin());
+            clientListener.start();
+            adminListener.start();
+        }
+        catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            logger.error("Unable create Http listeners\n\n");
+            if (clientListener != null)
+                clientListener.stop();
+
+            if (adminListener != null)
+                adminListener.stop();
+
+            System.exit(1);
+        }
+
         Scanner input = new Scanner(System.in);
         for(; !input.next().equals("stop"););
+
         clientListener.stop();
+        adminListener.stop();
     }
 }
