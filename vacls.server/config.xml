@@ -5,6 +5,6 @@
   </ConnectionParams>
   <SystemParams>
     <maxThreadPoolNumber>4</maxThreadPoolNumber>
-    <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java331.so</OpenCvPath>
+    <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java340.so</OpenCvPath>
   </SystemParams>
 </VaclsServerParams>

@@ -25,8 +25,8 @@ public class AdminResponse {
 
         public EntriesRange() {
             error_message = "";
-            minimum_date = "00.00.0000 00:00";
-            maximum_date = "00.00.0000 00:00";
+            minimum_date = "01.01.0001 00:00";
+            maximum_date = "01.01.0001 00:00";
         }
 
         public EntriesRange(String error_message, LocalDateTime minDate, LocalDateTime maxDate) {
@@ -59,7 +59,7 @@ public class AdminResponse {
 
         public Entry() {
             identifier = "0";
-            date = "00.00.0000 00:00";
+            date = "01.01.0001 00:00";
         }
 
         public Entry(String identifier, LocalDate date) {

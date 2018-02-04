@@ -13,6 +13,8 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.util.Scanner;
 
+@SuppressWarnings("all")
+
 public class HttpServer {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
 
@@ -65,20 +67,22 @@ public class HttpServer {
         }
         catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            logger.error("Unable create Http listeners\n\n");
+            logger.error("Unable create Http listeners");
             if (clientListener != null)
                 clientListener.stop();
 
             if (adminListener != null)
                 adminListener.stop();
 
+            logger.info("vacls.server.HttpServer stops\n\n");
             System.exit(1);
         }
 
         Scanner input = new Scanner(System.in);
-        for(; !input.next().equals("stop"););
+        for(; input.hasNext() && !input.next().equals("stop"););
 
         clientListener.stop();
         adminListener.stop();
+        logger.info("vacls.server.HttpServer stops\n\n");
     }
 }

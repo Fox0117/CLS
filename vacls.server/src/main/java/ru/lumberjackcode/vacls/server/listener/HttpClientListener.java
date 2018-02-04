@@ -49,13 +49,13 @@ public class HttpClientListener {
             server.start();
         }
         catch (Exception ex) {
-            logger.error("Server was interrupted");
+            logger.error("HttpClientListener was interrupted");
             logger.error(ex.getMessage(), ex);
         }
     }
 
     public void stop() {
-        logger.info("HttpClientListener stops\n\n");
+        logger.info("HttpClientListener stops");
         try {
             server.stop(1);
             httpThreadPool.shutdownNow();
@@ -68,7 +68,6 @@ public class HttpClientListener {
     public static class EchoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange){
-            logger.info("Establishing session...");
             try {
                 //Online status check
                 if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {

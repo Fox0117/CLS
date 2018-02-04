@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("all")
+
 public class HttpAdminListener {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
     private int portAdmin;
@@ -48,13 +50,13 @@ public class HttpAdminListener {
             server.start();
         }
         catch (Exception ex) {
-            logger.error("Admin server was interrupted");
+            logger.error("HttpAdminListener was interrupted");
             logger.error(ex.getMessage(), ex);
         }
     }
 
     public void stop() {
-        logger.info("HttpAdminListener stops\n\n");
+        logger.info("HttpAdminListener stops");
         try {
             server.stop(1);
         }
@@ -116,6 +118,7 @@ public class HttpAdminListener {
                 else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     Headers headers = exchange.getRequestHeaders();
                     if (!headers.containsKey("startDate") || !headers.containsKey("endDate")) {
+                        logger.info("Processing POST entries range request from admin");
                         try {
                             //TODO Get entries range
 
@@ -133,6 +136,7 @@ public class HttpAdminListener {
                         }
                     }
                     else {
+                        logger.info("Processing POST entries request from admin");
                         LocalDateTime startDate=null, endDate=null;
                         //Get header values
                         try {
@@ -150,10 +154,11 @@ public class HttpAdminListener {
                             //TODO Process entries
 
                             //Now return default value
-                            AdminResponse.Entries entry = new AdminResponse.Entries();
+                            AdminResponse.Entries entries = new AdminResponse.Entries();
+                            entries.add(new AdminResponse.Entry());
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                             OutputStream output = exchange.getResponseBody();
-                            output.write(entry.getUtf8Json());
+                            output.write(entries.getUtf8Json());
                             output.flush();
                             output.close();
                         }
@@ -162,6 +167,7 @@ public class HttpAdminListener {
                             logger.error(ex.getMessage(), ex);
                         }
                     }
+                    logger.info("POST request from admin processed");
                 }
                 //Different types of request
                 else {
