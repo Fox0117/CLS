@@ -120,16 +120,52 @@
   <data name="AdminWindow_Title" xml:space="preserve">
     <value>Администрирование</value>
   </data>
+  <data name="ChartMenuItem_Title" xml:space="preserve">
+    <value>График</value>
+  </data>
   <data name="EndDate_Label" xml:space="preserve">
     <value>Конечная дата:</value>
   </data>
+  <data name="ErrorWhileConnecting_Content" xml:space="preserve">
+    <value>Ошибка при соединении с сервером</value>
+  </data>
+  <data name="Error_Title" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="GroupByDay_Item" xml:space="preserve">
+    <value>День</value>
+  </data>
+  <data name="GroupByHour_Item" xml:space="preserve">
+    <value>Час</value>
+  </data>
+  <data name="GroupByMinute_Item" xml:space="preserve">
+    <value>Минута</value>
+  </data>
+  <data name="GroupByMonth_Item" xml:space="preserve">
+    <value>Месяц</value>
+  </data>
+  <data name="Grouping_Label" xml:space="preserve">
+    <value>Группировка:</value>
+  </data>
+  <data name="Information_Title" xml:space="preserve">
+    <value>Информация</value>
+  </data>
   <data name="ProcessRange_Conent" xml:space="preserve">
     <value>Обновить</value>
+  </data>
+  <data name="ScriptError_Content" xml:space="preserve">
+    <value>Ошибка при обработке скрипта</value>
+  </data>
+  <data name="ScriptMenuItem_Title" xml:space="preserve">
+    <value>Скрипт</value>
   </data>
   <data name="SendScript_Content" xml:space="preserve">
     <value>Отправить</value>
   </data>
   <data name="StartDate_Label" xml:space="preserve">
     <value>Начальная дата:</value>
+  </data>
+  <data name="TestScript_Content" xml:space="preserve">
+    <value>Тест</value>
   </data>
 </root>

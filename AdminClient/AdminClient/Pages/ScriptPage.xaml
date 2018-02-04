@@ -21,10 +21,10 @@
     </Page.Resources>
 
     <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
         <Grid>
             <avalonedit:TextEditor
@@ -49,8 +49,13 @@
             <controls:BusyControl IsBusy="{Binding IsBusy, Mode=OneWay}"/>
         </Grid>
         
-        <StackPanel Grid.Column="1" Margin="5,0,0,0">
+        <StackPanel Grid.Row="1" Margin="0,5,0,0" Orientation="Horizontal">
             <Button
+                Content="{x:Static localizations:StringResources.TestScript_Content}"
+                Command="{Binding TestScriptCommand}"/>
+
+            <Button
+                Margin="5,0,0,0"
                 Content="{x:Static localizations:StringResources.SendScript_Content}"
                 Command="{Binding SendScriptCommand}"/>
         </StackPanel>

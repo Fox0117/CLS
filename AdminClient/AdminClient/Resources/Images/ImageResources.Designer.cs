@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AdminClient.Resources.JavaScriptExamples {
+namespace AdminClient.Resources.Images {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace AdminClient.Resources.JavaScriptExamples {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class JSExampleResources {
+    public class ImageResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal JSExampleResources() {
+        internal ImageResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace AdminClient.Resources.JavaScriptExamples {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdminClient.Resources.JavaScriptExamples.JSExampleResources", typeof(JSExampleResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdminClient.Resources.Images.ImageResources", typeof(ImageResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,33 +61,12 @@ namespace AdminClient.Resources.JavaScriptExamples {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на function setup() {
-        ///  print(&quot;Ready to roll!&quot;);
-        ///  rollDice(20);
-        ///  rollDice(20);
-        ///  rollDice(6);
-        ///  print(&quot;Finished.&quot;);
-        ///}
-        ///
-        ///function rollDice(numSides) {
-        ///  var d = 1 + int(random(numSides));
-        ///  print(&quot;Rolling... &quot; + d);
-        ///}.
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        public static string Example_1 {
+        public static System.Drawing.Bitmap settings_icon_64 {
             get {
-                return ResourceManager.GetString("Example_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на function getAnswer() {
-        ///    return &quot;yea&quot;;
-        ///}.
-        /// </summary>
-        public static string Example_2 {
-            get {
-                return ResourceManager.GetString("Example_2", resourceCulture);
+                object obj = ResourceManager.GetObject("settings_icon_64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

@@ -6,6 +6,7 @@
          <ResourceDictionary>
              <ResourceDictionary.MergedDictionaries>
                  <ResourceDictionary Source="/MVVM_Tools;component/Resources/ResourceDictionaries/Converters.xaml" />
+                 <ResourceDictionary Source="Resources/ThemeResources/Colors.xaml"/>
              </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>
     </Application.Resources>

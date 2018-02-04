@@ -52,6 +52,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\MVVM_Tools.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.SfChart.WPF, Version=15.4460.0.17, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\Syncfusion.SfChart.WPF.dll</HintPath>
@@ -61,10 +64,12 @@
       <HintPath>Libraries\Syncfusion.Shared.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -93,6 +98,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\ThemeResources\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\AdminWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,11 +111,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Code\Interfaces\IDatabaseModel.cs" />
+    <Compile Include="Code\JsonConverters\ResponseJsonConverter.cs" />
     <Compile Include="Code\Models\DatabaseModel.cs" />
     <Compile Include="Code\Responses\EntriesRangeResponse.cs" />
     <Compile Include="Code\Responses\EntriesResponse.cs" />
     <Compile Include="Code\Responses\ScriptResponse.cs" />
     <Compile Include="Code\Utils\CollectionUtils.cs" />
+    <Compile Include="Code\Utils\EntriesUtils.cs" />
     <Compile Include="Code\ViewModels\Controls\LeftMenuItemViewModel.cs" />
     <Compile Include="Code\ViewModels\Pages\ChartPageViewModel.cs" />
     <Compile Include="Code\ViewModels\Pages\ScriptPageViewModel.cs" />
@@ -123,6 +134,11 @@
     </Compile>
     <Compile Include="Pages\ScriptPage.xaml.cs">
       <DependentUpon>ScriptPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Images\ImageResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImageResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\JavaScriptExamples\JSExampleResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -160,6 +176,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Images\ImageResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ImageResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\JavaScriptExamples\JSExampleResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>JSExampleResources.Designer.cs</LastGenOutput>
@@ -188,16 +208,18 @@
     <None Include="Libraries\Syncfusion.Shared.WPF.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\settings_icon_64.png" />
+    <Content Include="Resources\JavaScriptExamples\Example_2.js" />
     <Content Include="Resources\JavaScriptExamples\Example_1.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Fody.2.3.23\build\Fody.targets" Condition="Exists('..\packages\Fody.2.3.23\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.2.3.23\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.3.23\build\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.2.3.25\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.3.25\build\Fody.targets'))" />
   </Target>
   <Import Project="..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" />
+  <Import Project="..\packages\Fody.2.3.25\build\Fody.targets" Condition="Exists('..\packages\Fody.2.3.25\build\Fody.targets')" />
 </Project>

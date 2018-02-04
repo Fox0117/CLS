@@ -92,7 +92,8 @@
                 <chart:SfChart.SecondaryAxis>
                     <chart:NumericalAxis
                         Minimum="0"
-                        Maximum="{Binding VerticalAxisMaximum.Value, Mode=OneWay}"/>
+                        PlotOffset="30"
+                        />
                 </chart:SfChart.SecondaryAxis>
 
                 <chart:FastLineSeries
@@ -105,8 +106,8 @@
                         <chart:ChartAdornmentInfo Symbol="Custom" ShowMarker="True" >
                             <chart:ChartAdornmentInfo.SymbolTemplate>
                                 <DataTemplate>
-                                    <Ellipse IsHitTestVisible="False" Fill="#FF1BA1E2" Height="18" Width="18"
-                                                 StrokeThickness="3" Stroke="White"/>
+                                    <Ellipse IsHitTestVisible="False" Fill="#FF1BA1E2" Height="14" Width="14"
+                                                 StrokeThickness="2" Stroke="White"/>
                                 </DataTemplate>
                             </chart:ChartAdornmentInfo.SymbolTemplate>
                         </chart:ChartAdornmentInfo>
@@ -121,6 +122,9 @@
         <WrapPanel Grid.Row="1" Orientation="Horizontal">
             <WrapPanel.Resources>
                 <Style TargetType="chart:DateTimeEdit">
+                    <Setter Property="chart:SkinStorage.VisualStyle" Value="Metro"/>
+                </Style>
+                <Style TargetType="chart:ComboBoxAdv">
                     <Setter Property="chart:SkinStorage.VisualStyle" Value="Metro"/>
                 </Style>
             </WrapPanel.Resources>
@@ -138,10 +142,11 @@
                     IsCalendarEnabled="True"
                     IsWatchEnabled="True"
                     Height="36"
+                    DateTime="{Binding MinimumDate.Value, Mode=TwoWay}"
                     IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+            <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
                 <TextBlock
                     Text="{x:Static localizations:StringResources.EndDate_Label}"/>
 
@@ -153,6 +158,19 @@
                     Pattern="FullDateTime"
                     IsCalendarEnabled="True"
                     IsWatchEnabled="True"
+                    DateTime="{Binding MaximumDate.Value, Mode=TwoWay}"
+                    IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,5,0">
+                <TextBlock
+                    Text="{x:Static localizations:StringResources.Grouping_Label}"/>
+
+                <chart:ComboBoxAdv
+                    Margin="5,0,0,0"
+                    MinWidth="100"
+                    SelectedIndex="{Binding GroupingByIndex.Value}"
+                    ItemsSource="{Binding GroupingByItems}"
                     IsEnabled="{Binding IsBusy, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"/>
             </StackPanel>
         </WrapPanel>

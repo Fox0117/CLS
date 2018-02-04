@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using AdminClient.Code.Utils;
 using AdminClient.Code.ViewModels.Controls;
+using AdminClient.Resources.Localizations;
 using MVVM_Tools.Code.Commands;
 
 namespace AdminClient.Code.ViewModels.Windows
@@ -51,7 +52,7 @@ namespace AdminClient.Code.ViewModels.Windows
             _leftMenuItems.Add(
                 new LeftMenuItemViewModel
                 {
-                    Title = "Chart",
+                    Title = StringResources.ChartMenuItem_Title,
                     IsSelected = true,
                     PageUri = new Uri("../Pages/ChartPage.xaml", UriKind.Relative)
                 }
@@ -60,7 +61,7 @@ namespace AdminClient.Code.ViewModels.Windows
             _leftMenuItems.Add(
                 new LeftMenuItemViewModel
                 {
-                    Title = "Script",
+                    Title = StringResources.ScriptMenuItem_Title,
                     PageUri = new Uri("../Pages/ScriptPage.xaml", UriKind.Relative)
                 }
             );

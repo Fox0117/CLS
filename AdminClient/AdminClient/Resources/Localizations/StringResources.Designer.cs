@@ -70,6 +70,15 @@ namespace AdminClient.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на График.
+        /// </summary>
+        public static string ChartMenuItem_Title {
+            get {
+                return ResourceManager.GetString("ChartMenuItem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Конечная дата:.
         /// </summary>
         public static string EndDate_Label {
@@ -79,11 +88,101 @@ namespace AdminClient.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        public static string Error_Title {
+            get {
+                return ResourceManager.GetString("Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка при соединении с сервером.
+        /// </summary>
+        public static string ErrorWhileConnecting_Content {
+            get {
+                return ResourceManager.GetString("ErrorWhileConnecting_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на День.
+        /// </summary>
+        public static string GroupByDay_Item {
+            get {
+                return ResourceManager.GetString("GroupByDay_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Час.
+        /// </summary>
+        public static string GroupByHour_Item {
+            get {
+                return ResourceManager.GetString("GroupByHour_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Минута.
+        /// </summary>
+        public static string GroupByMinute_Item {
+            get {
+                return ResourceManager.GetString("GroupByMinute_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Месяц.
+        /// </summary>
+        public static string GroupByMonth_Item {
+            get {
+                return ResourceManager.GetString("GroupByMonth_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Группировка:.
+        /// </summary>
+        public static string Grouping_Label {
+            get {
+                return ResourceManager.GetString("Grouping_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Информация.
+        /// </summary>
+        public static string Information_Title {
+            get {
+                return ResourceManager.GetString("Information_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Обновить.
         /// </summary>
         public static string ProcessRange_Conent {
             get {
                 return ResourceManager.GetString("ProcessRange_Conent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка при обработке скрипта.
+        /// </summary>
+        public static string ScriptError_Content {
+            get {
+                return ResourceManager.GetString("ScriptError_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скрипт.
+        /// </summary>
+        public static string ScriptMenuItem_Title {
+            get {
+                return ResourceManager.GetString("ScriptMenuItem_Title", resourceCulture);
             }
         }
         
@@ -102,6 +201,15 @@ namespace AdminClient.Resources.Localizations {
         public static string StartDate_Label {
             get {
                 return ResourceManager.GetString("StartDate_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тест.
+        /// </summary>
+        public static string TestScript_Content {
+            get {
+                return ResourceManager.GetString("TestScript_Content", resourceCulture);
             }
         }
     }

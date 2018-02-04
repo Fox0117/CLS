@@ -12,7 +12,6 @@ namespace AdminClient.Code.Responses
             public DateTime date;
         }
 
-        public string status;
         public string error_message;
         public List<OneEntry> entries;
     }

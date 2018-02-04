@@ -16,5 +16,15 @@ namespace AdminClient.Code.Utils
             foreach (var item in collection)
                 action(item);
         }
+
+        public static void AddAll<T>(this ICollection<T> collection, IEnumerable<T> values)
+        {
+            values.ForEach(collection.Add);
+        }
+
+        public static void AddAll<T>(this ICollection<T> collection, params T[] values)
+        {
+            values.ForEach(collection.Add);
+        }
     }
 }

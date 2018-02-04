@@ -16,25 +16,61 @@
         d:DataContext="{d:DesignInstance windows:AdminWindowViewModel}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="270"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#1E1E1E">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-            <ItemsControl ItemsSource="{Binding LeftMenuItems}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <controls:LeftMenuItem
-                            Title="{Binding Title, Mode=OneWay}"
-                            IsSelected="{Binding IsSelected, Mode=OneWay}"
-                            ClickCommand="{Binding DataContext.LeftMenuClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                            ClickCommandParameter="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Border
+                Background="{DynamicResource HeaderBackgroundBrush}">
+                <Border.Effect>
+                    <DropShadowEffect Direction="-120" BlurRadius="10" ShadowDepth="0.9" Opacity="0.6"/>
+                </Border.Effect>
 
-        </ScrollViewer>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image
+                        VerticalAlignment="Center"
+                        Height="46"
+                        Margin="0,10"
+                        Source="../Resources/Images/settings_icon_64.png"/>
+
+                    <TextBlock 
+                        VerticalAlignment="Center"
+                        FontSize="25"
+                        Margin="10,0,7,0"
+                        Text="Admin panel"
+                        Foreground="WhiteSmoke"
+                        FontFamily="Century Gothic"/>
+                </StackPanel>
+            </Border>
+
+            <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto"
+                Background="{DynamicResource BackgroundBrush}">
+                <ScrollViewer.Effect>
+                    <DropShadowEffect Direction="-90" BlurRadius="6" ShadowDepth="1" Opacity="0.8"/>
+                </ScrollViewer.Effect>
+
+                <ItemsControl ItemsSource="{Binding LeftMenuItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:LeftMenuItem
+                                Title="{Binding Title, Mode=OneWay}"
+                                IsSelected="{Binding IsSelected, Mode=OneWay}"
+                                ClickCommand="{Binding DataContext.LeftMenuClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                ClickCommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </ScrollViewer>
+        </Grid>
 
         <Frame
             Grid.Column="1"
