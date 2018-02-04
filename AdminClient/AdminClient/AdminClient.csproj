@@ -101,6 +101,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Code\Interfaces\IDatabaseModel.cs" />
+    <Compile Include="Code\Models\DatabaseModel.cs" />
+    <Compile Include="Code\Responses\EntriesRangeResponse.cs" />
+    <Compile Include="Code\Responses\EntriesResponse.cs" />
+    <Compile Include="Code\Responses\ScriptResponse.cs" />
     <Compile Include="Code\Utils\CollectionUtils.cs" />
     <Compile Include="Code\ViewModels\Controls\LeftMenuItemViewModel.cs" />
     <Compile Include="Code\ViewModels\Pages\ChartPageViewModel.cs" />
