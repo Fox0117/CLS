@@ -27,10 +27,12 @@
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </releases>
+
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
+
 
         </repository>
     </repositories>
