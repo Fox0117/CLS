@@ -1,34 +1,43 @@
-## Users range request
+## All requests use POST method
+
+## Response codes
+
+| code  |      meaning      |
+| :---: | :---------------: |
+|  200  |        OK         |
+|  4xx  | client side error |
+|  5xx  | server side error |
+| other |   unknown error   |
+
+## Entries range request
 
 ```
 no parameters
 ```
 
-## Users range response
+## Entries range response
 
 ```javascript
 {
-    "status": "OK", // or "Error"
-    "error_message": "Some message", // only if status == Error
+    "error_message": "Some message", // optional
     "minimum_date": "01.02.2018 17:06", // "dd.mm.yyyy HH:MM" (inclusive) // returns minimum date for user requests
     "maximum_date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive) // returns maximum date for user requests
 }
 ```
 
-## Users request
+## Entries request
 
 ```
 startDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 endDate = "01.02.2018 17:06" // "dd.mm.yyyy HH:MM" (inclusive)
 ```
 
-## Users response
+## Entries response
 
 ```javascript
 {
-    "status": "OK", // or "Error"
-    "error_message": "Some message", // only if status == Error
-    "items": [
+    "error_message": "Some message", // optional
+    "entries": [
         {
             "identifier": "1454Xgf32", // some unique string
             "date": "01.02.2018 17:06" // "dd.mm.yyyy HH:MM"
@@ -50,14 +59,16 @@ no parameters
 
 ```javascript
 {
-    "status": "OK", // or "Error"
-    "error_message": "Some message", // only if status == Error
-    "text": "function () { return \"Test message\" }" // current script
+    "error_message": "Some message", // optional
+    "script": "function () { return \"Test message\" }" // current script
 }
 ```
 
 ## JS upload script request
 
 ```
-scriptText = "function () { return \"Test message\" }" // script text
+javascriptStatus = "upload"
+
+body:
+    "function () { return \"Test message\" }" // script text
 ```
