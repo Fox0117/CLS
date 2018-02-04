@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.opencv.core.Mat;
 
-
 import java.nio.charset.Charset;
 import java.time.Clock;
 import java.util.Base64;
