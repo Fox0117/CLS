@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using AdminClient.Code.Interfaces;
 using AdminClient.Code.Models;
@@ -84,7 +83,7 @@ namespace AdminClient.Code.ViewModels.Pages
                 }
                 catch (WebException)
                 {
-                    ShowExclamation(StringResources.ErrorWhileConnecting_Content);
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }
         }
@@ -100,7 +99,7 @@ namespace AdminClient.Code.ViewModels.Pages
                 }
                 catch (WebException)
                 {
-                    ShowExclamation(StringResources.ErrorWhileConnecting_Content);
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }
         }
@@ -135,14 +134,6 @@ namespace AdminClient.Code.ViewModels.Pages
             List<(DateTime date, int count)> entries = await Task.Run(() => groupFunc(_entries));
 
             entries.ForEach(it => ChartItems.Add(new ChartItemModel(it.date, it.count)));
-        }
-
-        private static void ShowExclamation(string message)
-        {
-            MessageBox.Show(
-                message, StringResources.Error_Title,
-                MessageBoxButton.OK, MessageBoxImage.Exclamation
-            );
         }
 
         private void RaiseCommandsCanExecute()

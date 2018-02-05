@@ -15,6 +15,7 @@ namespace AdminClient.Code.Models
     {
         private const string StartAddress = "http://capitangaga.redirectme.net:5000/";
         private const string EntriesAddress = StartAddress + "entries/";
+        private const string JavaScriptAddress = StartAddress + "js/";
 
         public EntriesRangeResponse GetEntriesRange()
         {
@@ -50,12 +51,34 @@ namespace AdminClient.Code.Models
 
         public ScriptResponse GetScript()
         {
-            throw new NotImplementedException();
+            var textResponse = SendPostToString(JavaScriptAddress);
+
+            return new ScriptResponse();
         }
 
         public Task<ScriptResponse> GetScriptAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => GetScript(), cancellationToken);
+        }
+
+        public void SendScript(string scriptText)
+        {
+            var textResponse = 
+                SendPostToString(
+                    JavaScriptAddress,
+                    new NameValueCollection
+                    {
+                        { "javascriptStatus", "upload" }
+                    },
+                    Encoding.UTF8.GetBytes(scriptText)
+                );
+
+            var a = 3;
+        }
+
+        public Task SendScriptAsync(string scriptText, CancellationToken cancellationToken = default)
+        {
+            return Task.Run(() => SendScript(scriptText), cancellationToken);
         }
 
         private static T DeserializeJson<T>(string jsonString)
@@ -63,12 +86,12 @@ namespace AdminClient.Code.Models
             return JsonConvert.DeserializeObject<T>(jsonString, new ResponseJsonConverter());
         }
 
-        private static string SendPostToString(string uri, NameValueCollection items = null)
+        private static string SendPostToString(string uri, NameValueCollection items = null, byte[] data = null)
         {
-            return SendPost(uri, items); //Encoding.UTF8.GetString(SendPost(uri, items));
+            return Encoding.UTF8.GetString(SendPost(uri, items, data));
         }
 
-        private static string SendPost(string uri, NameValueCollection items = null)
+        private static byte[] SendPost(string uri, NameValueCollection items = null, byte[] data = null)
         {
             using (var client = new WebClient())
             {
@@ -80,7 +103,7 @@ namespace AdminClient.Code.Models
                     }
                 }
 
-                return client.UploadString(uri, "");
+                return client.UploadData(uri, data ?? new byte[0]);
             }
         }
     }

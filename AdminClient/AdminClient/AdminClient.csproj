@@ -118,6 +118,7 @@
     <Compile Include="Code\Responses\ScriptResponse.cs" />
     <Compile Include="Code\Utils\CollectionUtils.cs" />
     <Compile Include="Code\Utils\EntriesUtils.cs" />
+    <Compile Include="Code\Utils\MessageUtils.cs" />
     <Compile Include="Code\ViewModels\Controls\LeftMenuItemViewModel.cs" />
     <Compile Include="Code\ViewModels\Pages\ChartPageViewModel.cs" />
     <Compile Include="Code\ViewModels\Pages\ScriptPageViewModel.cs" />

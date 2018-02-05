@@ -1,22 +1,26 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
+using AdminClient.Code.Interfaces;
+using AdminClient.Code.Models;
+using AdminClient.Code.Utils;
 using AdminClient.Resources.JavaScriptExamples;
 using AdminClient.Resources.Localizations;
 using ICSharpCode.AvalonEdit;
 using MVVM_Tools.Code.Commands;
+
 using MessageBox = System.Windows.MessageBox;
-using WebBrowser = System.Windows.Controls.WebBrowser;
 
 namespace AdminClient.Code.ViewModels.Pages
 {
     internal class ScriptPageViewModel : ViewModelBase
     {
         private readonly TextEditor _editor;
+        private readonly IDatabaseModel _databaseModel = new DatabaseModel();
 
         public ICommand TestScriptCommand => _testScriptCommand;
         private readonly ActionCommand _testScriptCommand;
@@ -77,7 +81,14 @@ namespace AdminClient.Code.ViewModels.Pages
         {
             using (BusyDisposable())
             {
-                await Task.Delay(1000);
+                try
+                {
+                    await _databaseModel.SendScriptAsync(_editor.Text);
+                }
+                catch (WebException ex)
+                {
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content + "\n" + ex);
+                }
             }
         }
 
@@ -103,10 +114,19 @@ namespace AdminClient.Code.ViewModels.Pages
         {
             using (BusyDisposable())
             {
-                await Task.Delay(1000);
+                try
+                {
+                    var response = await _databaseModel.GetScriptAsync();
 
-                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(JSExampleResources.Example_2)))
-                    _editor.Load(stream);
+                    await Task.Delay(1000);
+
+                    using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(JSExampleResources.Example_2)))
+                        _editor.Load(stream);
+                }
+                catch (WebException ex)
+                {
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content + "\n" + ex);
+                }
             }
         }
     }

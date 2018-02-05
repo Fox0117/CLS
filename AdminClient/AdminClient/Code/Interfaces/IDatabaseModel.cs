@@ -18,5 +18,9 @@ namespace AdminClient.Code.Interfaces
         ScriptResponse GetScript();
 
         Task<ScriptResponse> GetScriptAsync(CancellationToken cancellationToken = default);
+
+        void SendScript(string scriptText);
+        
+        Task SendScriptAsync(string scriptText, CancellationToken cancellationToken = default);
     }
 }
