@@ -231,7 +231,7 @@ public class HttpAdminListener {
                         //Upload js into file
                         try {
                             PrintWriter upload = new PrintWriter(clientScriptPath, "UTF-8");
-                            upload.println(clientScript);
+                            upload.print(clientScript);
                             upload.close();
                             logger.info("CLientScript.js uploaded successfully...");
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
