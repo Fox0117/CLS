@@ -17,6 +17,7 @@
         <xs:sequence>
             <xs:element type="xs:int" name="maxThreadPoolNumber" default="1"/>
             <xs:element type="xs:string" name="OpenCvPath"/>
+            <xs:element type="xs:string" name="ClientScriptPath"/>
         </xs:sequence>
     </xs:complexType>
 

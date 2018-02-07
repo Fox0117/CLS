@@ -7,7 +7,6 @@ import ru.lumberjackcode.vacls.server.listener.HttpClientListener;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
@@ -61,7 +60,7 @@ public class HttpServer {
         HttpAdminListener adminListener=null;
         try {
             clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
-            adminListener = new HttpAdminListener(configParams.getConnectionParams().getPortAdmin());
+            adminListener = new HttpAdminListener(configParams.getConnectionParams().getPortAdmin(), configParams.getSystemParams().getClientScriptPath());
             clientListener.start();
             adminListener.start();
         }

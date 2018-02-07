@@ -27,9 +27,12 @@ public class HttpAdminListener {
     private final static Logger logger = Logger.getLogger(HttpServer.class);
     private int portAdmin;
     private com.sun.net.httpserver.HttpServer server;
+    private String clientScriptPath;
 
-    public HttpAdminListener(int portAdmin){
+    public HttpAdminListener(int portAdmin, String clientScriptPath){
         this.portAdmin = portAdmin;
+        this.clientScriptPath = clientScriptPath;
+        JsHandler.clientScriptPath = clientScriptPath;
         logger.info("HttpAdminListener binding on port: " + Integer.toString(this.portAdmin) + "...");
         try {
             server = com.sun.net.httpserver.HttpServer.create();
@@ -187,6 +190,8 @@ public class HttpAdminListener {
     }
 
     public static class JsHandler implements HttpHandler {
+        static public String clientScriptPath;
+
         @Override
         public void handle(HttpExchange exchange){
             try {
@@ -225,7 +230,7 @@ public class HttpAdminListener {
 
                         //Upload js into file
                         try {
-                            PrintWriter upload = new PrintWriter("ClientScript.js", "UTF-8");
+                            PrintWriter upload = new PrintWriter(clientScriptPath, "UTF-8");
                             upload.println(clientScript);
                             upload.close();
                             logger.info("CLientScript.js uploaded successfully...");
@@ -243,7 +248,7 @@ public class HttpAdminListener {
                         logger.info("Processing POST js download request from admin...");
                         try {
                             //Get data from file
-                            byte[] clientScript = Files.readAllBytes(Paths.get("ClientScript.js"));
+                            byte[] clientScript = Files.readAllBytes(Paths.get(clientScriptPath));
                             AdminResponse.JSDownload jsDownload = new AdminResponse.JSDownload("",
                                     new String(clientScript, Charset.forName("UTF-8")));
 

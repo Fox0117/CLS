@@ -6,5 +6,6 @@
   <SystemParams>
     <maxThreadPoolNumber>4</maxThreadPoolNumber>
     <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java340.so</OpenCvPath>
+    <ClientScriptPath>/home/vacls/debug/vacls-server/ClientScript.js</ClientScriptPath>
   </SystemParams>
 </VaclsServerParams>
