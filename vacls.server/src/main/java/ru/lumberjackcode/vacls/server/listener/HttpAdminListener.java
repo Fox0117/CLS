@@ -244,11 +244,13 @@ public class HttpAdminListener {
                         try {
                             //Get data from file
                             byte[] clientScript = Files.readAllBytes(Paths.get("ClientScript.js"));
+                            AdminResponse.JSDownload jsDownload = new AdminResponse.JSDownload("",
+                                    new String(clientScript, Charset.forName("UTF-8")));
 
                             //Send data to admin
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                             OutputStream output = exchange.getResponseBody();
-                            output.write(clientScript);
+                            output.write(jsDownload.getUtf8Json());
                             output.close();
                             logger.info("POST js download request from admin processed...");
                             return;
