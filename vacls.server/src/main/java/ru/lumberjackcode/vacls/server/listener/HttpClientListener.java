@@ -27,7 +27,7 @@ public class HttpClientListener {
     public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath){
         this.portClient = portClient;
         this.openCVPath = openCVPath;
-        logger.info("HttpClientListener binding on port: " + Integer.toString(this.portClient));
+        logger.info("HttpClientListener binding on port: " + Integer.toString(this.portClient) + "...");
         try {
             server = com.sun.net.httpserver.HttpServer.create();
             server.bind(new InetSocketAddress(portClient), 0);
@@ -44,18 +44,18 @@ public class HttpClientListener {
     }
 
     public void start() {
-        logger.info("HttpClientListener starting on port: " + Integer.toString(this.portClient));
+        logger.info("HttpClientListener starting on port: " + Integer.toString(this.portClient) + "...");
         try {
             server.start();
         }
         catch (Exception ex) {
-            logger.error("HttpClientListener was interrupted");
+            logger.error("HttpClientListener was interrupted...");
             logger.error(ex.getMessage(), ex);
         }
     }
 
     public void stop() {
-        logger.info("HttpClientListener stops");
+        logger.info("HttpClientListener stops...");
         try {
             server.stop(1);
             httpThreadPool.shutdownNow();
@@ -85,7 +85,7 @@ public class HttpClientListener {
                 }
                 //Main request
                 else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-                    logger.info("Processing POST request from client");
+                    logger.info("Processing POST request from client...");
                     InputStream input;
                     byte[] jSonInputData;
                     ClientRequest clientReq;
@@ -121,7 +121,7 @@ public class HttpClientListener {
                         logger.error(ex.getMessage(), ex);
                         return;
                     }
-                    logger.info("POST request from client processed");
+                    logger.info("POST request from client processed...");
                 }
                 //Different types of request
                 else {

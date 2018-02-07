@@ -10,10 +10,13 @@ import ru.lumberjackcode.vacls.transfere.*;
 import com.sun.net.httpserver.*;
 import sun.net.www.protocol.http.HttpURLConnection;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.xml.ws.Response;
+import java.io.*;
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +30,7 @@ public class HttpAdminListener {
 
     public HttpAdminListener(int portAdmin){
         this.portAdmin = portAdmin;
-        logger.info("HttpAdminListener binding on port: " + Integer.toString(this.portAdmin));
+        logger.info("HttpAdminListener binding on port: " + Integer.toString(this.portAdmin) + "...");
         try {
             server = com.sun.net.httpserver.HttpServer.create();
             server.bind(new InetSocketAddress(portAdmin), 0);
@@ -45,18 +48,18 @@ public class HttpAdminListener {
     }
 
     public void start() {
-        logger.info("HttpAdminListener starting on port: " + Integer.toString(this.portAdmin));
+        logger.info("HttpAdminListener starting on port: " + Integer.toString(this.portAdmin) + "...");
         try {
             server.start();
         }
         catch (Exception ex) {
-            logger.error("HttpAdminListener was interrupted");
+            logger.error("HttpAdminListener was interrupted...");
             logger.error(ex.getMessage(), ex);
         }
     }
 
     public void stop() {
-        logger.info("HttpAdminListener stops");
+        logger.info("HttpAdminListener stops...");
         try {
             server.stop(1);
         }
@@ -118,7 +121,7 @@ public class HttpAdminListener {
                 else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                     Headers headers = exchange.getRequestHeaders();
                     if (!headers.containsKey("startDate") || !headers.containsKey("endDate")) {
-                        logger.info("Processing POST entries range request from admin");
+                        logger.info("Processing POST entries range request from admin...");
                         try {
                             //TODO Get entries range
 
@@ -136,7 +139,7 @@ public class HttpAdminListener {
                         }
                     }
                     else {
-                        logger.info("Processing POST entries request from admin");
+                        logger.info("Processing POST entries request from admin...");
                         LocalDateTime startDate=null, endDate=null;
                         //Get header values
                         try {
@@ -167,7 +170,7 @@ public class HttpAdminListener {
                             logger.error(ex.getMessage(), ex);
                         }
                     }
-                    logger.info("POST request from admin processed");
+                    logger.info("POST request from admin processed...");
                 }
                 //Different types of request
                 else {
@@ -201,9 +204,63 @@ public class HttpAdminListener {
                         logger.error(ex.getMessage(), ex);
                     }
                 }
-                /*else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-                    //TODO POST request processing
-                }*/
+                else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    Headers headers = exchange.getRequestHeaders();
+                    if (headers.containsKey("javascriptStatus") && headers.get("javascriptStatus").get(0).equalsIgnoreCase("upload")) {
+                        logger.info("Processing POST js upload request from admin...");
+                        InputStream input;
+                        String clientScript;
+
+                        //Get data from request
+                        try {
+                            input = exchange.getRequestBody();
+                            clientScript = IOUtils.toString(input, Charset.forName("UTF-8"));
+                        }
+                        catch (Exception ex) {
+                            exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                            exchange.close();
+                            logger.error(ex.getMessage(), ex);
+                            return;
+                        }
+
+                        //Upload js into file
+                        try {
+                            PrintWriter upload = new PrintWriter("ClientScript.js", "UTF-8");
+                            upload.println(clientScript);
+                            upload.close();
+                            logger.info("CLientScript.js uploaded successfully...");
+                            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                            exchange.close();
+                        }
+                        catch (Exception ex) {
+                            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                            exchange.close();
+                            logger.error(ex.getMessage(), ex);
+                            return;
+                        }
+                    }
+                    else {
+                        logger.info("Processing POST js download request from admin...");
+                        try {
+                            //Get data from file
+                            byte[] clientScript = Files.readAllBytes(Paths.get("ClientScript.js"));
+
+                            //Send data to admin
+                            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                            OutputStream output = exchange.getResponseBody();
+                            output.write(clientScript);
+                            output.close();
+                            logger.info("POST js download request from admin processed...");
+                            return;
+                        }
+                        catch (Exception ex) {
+                            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                            exchange.close();
+                            logger.error(ex.getMessage(), ex);
+                            return;
+                        }
+                    }
+                }
                 //Different types of request
                 else {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
