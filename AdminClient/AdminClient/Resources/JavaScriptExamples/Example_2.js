@@ -1,3 +1,3 @@
-﻿function getAnswer() {
+﻿function getMessage(parameters) {
     return "test message";
 }

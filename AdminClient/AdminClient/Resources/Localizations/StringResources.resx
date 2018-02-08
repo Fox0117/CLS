@@ -123,6 +123,9 @@
   <data name="ChartMenuItem_Title" xml:space="preserve">
     <value>График</value>
   </data>
+  <data name="ChartPage_Title" xml:space="preserve">
+    <value>Количество посетителей</value>
+  </data>
   <data name="EndDate_Label" xml:space="preserve">
     <value>Конечная дата:</value>
   </data>
@@ -158,6 +161,9 @@
   </data>
   <data name="ScriptMenuItem_Title" xml:space="preserve">
     <value>Скрипт</value>
+  </data>
+  <data name="ScriptNotExists_Content" xml:space="preserve">
+    <value>Скрипт пока ещё не существует. Загрузить пример скрипта?</value>
   </data>
   <data name="SendScript_Content" xml:space="preserve">
     <value>Отправить</value>

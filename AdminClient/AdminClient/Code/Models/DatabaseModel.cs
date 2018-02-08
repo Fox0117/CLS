@@ -17,6 +17,8 @@ namespace AdminClient.Code.Models
         private const string EntriesAddress = StartAddress + "entries/";
         private const string JavaScriptAddress = StartAddress + "js/";
 
+        private static readonly JsonConverter ResponseConverter = new ResponseJsonConverter();
+
         public EntriesRangeResponse GetEntriesRange()
         {
             var textResponse = SendPostToString(EntriesAddress);
@@ -36,8 +38,8 @@ namespace AdminClient.Code.Models
                     EntriesAddress, 
                     new NameValueCollection
                     {
-                        { "startDate", "11.11.1111 11:11" },
-                        { "endDate",   "11.11.1111 11:11" }
+                        { "startDate", DateToString(startDate) },
+                        { "endDate",   DateToString(endDate) }
                     }
                 );
 
@@ -53,7 +55,7 @@ namespace AdminClient.Code.Models
         {
             var textResponse = SendPostToString(JavaScriptAddress);
 
-            return new ScriptResponse();
+            return DeserializeJson<ScriptResponse>(textResponse);
         }
 
         public Task<ScriptResponse> GetScriptAsync(CancellationToken cancellationToken = default)
@@ -63,17 +65,14 @@ namespace AdminClient.Code.Models
 
         public void SendScript(string scriptText)
         {
-            var textResponse = 
-                SendPostToString(
-                    JavaScriptAddress,
-                    new NameValueCollection
-                    {
-                        { "javascriptStatus", "upload" }
-                    },
-                    Encoding.UTF8.GetBytes(scriptText)
-                );
-
-            var a = 3;
+            SendPostToString(
+                JavaScriptAddress,
+                new NameValueCollection
+                {
+                    { "javascriptStatus", "upload" }
+                },
+                Encoding.UTF8.GetBytes(scriptText)
+            );
         }
 
         public Task SendScriptAsync(string scriptText, CancellationToken cancellationToken = default)
@@ -81,9 +80,14 @@ namespace AdminClient.Code.Models
             return Task.Run(() => SendScript(scriptText), cancellationToken);
         }
 
+        private static string DateToString(DateTime date)
+        {
+            return date.ToString("dd.MM.yyyy HH:mm");
+        }
+
         private static T DeserializeJson<T>(string jsonString)
         {
-            return JsonConvert.DeserializeObject<T>(jsonString, new ResponseJsonConverter());
+            return JsonConvert.DeserializeObject<T>(jsonString, ResponseConverter);
         }
 
         private static string SendPostToString(string uri, NameValueCollection items = null, byte[] data = null)

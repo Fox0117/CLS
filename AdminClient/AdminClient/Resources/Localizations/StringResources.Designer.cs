@@ -79,6 +79,15 @@ namespace AdminClient.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Количество посетителей.
+        /// </summary>
+        public static string ChartPage_Title {
+            get {
+                return ResourceManager.GetString("ChartPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Конечная дата:.
         /// </summary>
         public static string EndDate_Label {
@@ -183,6 +192,15 @@ namespace AdminClient.Resources.Localizations {
         public static string ScriptMenuItem_Title {
             get {
                 return ResourceManager.GetString("ScriptMenuItem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скрипт пока ещё не существует. Загрузить пример скрипта?.
+        /// </summary>
+        public static string ScriptNotExists_Content {
+            get {
+                return ResourceManager.GetString("ScriptNotExists_Content", resourceCulture);
             }
         }
         

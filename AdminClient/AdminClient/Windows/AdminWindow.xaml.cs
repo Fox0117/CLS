@@ -1,16 +1,19 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 using AdminClient.Code.ViewModels.Windows;
 
 namespace AdminClient.Windows
 {
-    public partial class MainWindow
+    public partial class AdminWindow
     {
-        public MainWindow()
+        public AdminWindow()
         {
             InitializeComponent();
 
             ViewModel = new AdminWindowViewModel();
+
+            Closed += (sender, args) => Application.Current.Shutdown(0);
         }
 
         internal AdminWindowViewModel ViewModel

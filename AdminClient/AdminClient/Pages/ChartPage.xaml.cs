@@ -21,10 +21,6 @@ namespace AdminClient.Pages
         private async void ChartPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             await ViewModel.LoadItems();
-
-            //await ViewModel.LoadItems();
-
-            //Chart.Series[0].ref
         }
     }
 }

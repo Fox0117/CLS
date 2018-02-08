@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +8,8 @@ using AdminClient.Code.Models;
 using AdminClient.Code.Utils;
 using AdminClient.Resources.JavaScriptExamples;
 using AdminClient.Resources.Localizations;
+using Bugsnag;
+using Bugsnag.Clients;
 using ICSharpCode.AvalonEdit;
 using MVVM_Tools.Code.Commands;
 
@@ -56,7 +56,7 @@ namespace AdminClient.Code.ViewModels.Pages
                 );
                 browser.Refresh();
 
-                var result = browser.Document.InvokeScript("getAnswer");
+                var result = browser.Document.InvokeScript("getMessage", null);
 
                 if (result == null)
                 {
@@ -87,7 +87,8 @@ namespace AdminClient.Code.ViewModels.Pages
                 }
                 catch (WebException ex)
                 {
-                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content + "\n" + ex);
+                    WPFClient.NotifyAsync(new WebException("Can't send script", ex), Severity.Warning);
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }
         }
@@ -118,14 +119,28 @@ namespace AdminClient.Code.ViewModels.Pages
                 {
                     var response = await _databaseModel.GetScriptAsync();
 
-                    await Task.Delay(1000);
-
-                    using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(JSExampleResources.Example_2)))
-                        _editor.Load(stream);
+                    if (!string.IsNullOrEmpty(response.script))
+                    {
+                        _editor.Text = response.script;
+                    }
+                    else
+                    {
+                        if (
+                            MessageBox.Show(
+                                StringResources.ScriptNotExists_Content,
+                                StringResources.Information_Title,
+                                MessageBoxButton.YesNo) ==
+                            MessageBoxResult.Yes
+                        )
+                        {
+                            _editor.Text = JSExampleResources.Example_2;
+                        }
+                    }
                 }
                 catch (WebException ex)
                 {
-                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content + "\n" + ex);
+                    WPFClient.NotifyAsync(new WebException("Can't load script", ex), Severity.Warning);
+                    MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }
         }

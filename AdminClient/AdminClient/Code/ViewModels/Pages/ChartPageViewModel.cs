@@ -10,6 +10,8 @@ using AdminClient.Code.Models;
 using AdminClient.Code.Responses;
 using AdminClient.Code.Utils;
 using AdminClient.Resources.Localizations;
+using Bugsnag;
+using Bugsnag.Clients;
 using MVVM_Tools.Code.Commands;
 using MVVM_Tools.Code.Providers;
 
@@ -81,8 +83,9 @@ namespace AdminClient.Code.ViewModels.Pages
                 {
                     await LoadDates();
                 }
-                catch (WebException)
+                catch (WebException ex)
                 {
+                    WPFClient.NotifyAsync(new WebException("Can't download range min/max", ex), Severity.Warning);
                     MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }
@@ -97,8 +100,9 @@ namespace AdminClient.Code.ViewModels.Pages
                     await LoadEntries();
                     await VisualizeEntries();
                 }
-                catch (WebException)
+                catch (WebException ex)
                 {
+                    WPFClient.NotifyAsync(new WebException("Can't download statistics by selected range", ex), Severity.Warning);
                     MessageUtils.ShowExclamation(StringResources.ErrorWhileConnecting_Content);
                 }
             }

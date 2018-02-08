@@ -60,7 +60,7 @@
                                 <Setter Property="StrokeDashArray" Value="8,5,2,5"/>
                                 <Setter Property="Margin" Value="1,0,0,0"/>
                                 <Setter Property="StrokeThickness" Value="2"/>
-                                <Setter Property="StrokeDashCap" Value="Round"></Setter>
+                                <Setter Property="StrokeDashCap" Value="Round"/>
                             </Style>
                         </chart:ChartTrackBallBehavior.LineStyle>
                     </chart:ChartTrackBallBehavior>
@@ -79,8 +79,12 @@
                 </chart:SfChart.Style>
 
                 <chart:SfChart.Header>
-                    <TextBlock FontSize="24" FontFamily="Segoe UI" Foreground="Black"
-                           Margin="0,0,0,20">Количество уникальных людей</TextBlock>
+                    <TextBlock
+                        Margin="0,0,0,20"
+                        FontSize="24"
+                        FontFamily="Segoe UI"
+                        Foreground="Black"
+                        Text="{x:Static localizations:StringResources.ChartPage_Title}"/>
                 </chart:SfChart.Header>
 
                 <chart:SfChart.PrimaryAxis>
@@ -92,8 +96,7 @@
                 <chart:SfChart.SecondaryAxis>
                     <chart:NumericalAxis
                         Minimum="0"
-                        PlotOffset="30"
-                        />
+                        PlotOffset="30"/>
                 </chart:SfChart.SecondaryAxis>
 
                 <chart:FastLineSeries

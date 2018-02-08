@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using Bugsnag;
+using Bugsnag.Clients;
 using Newtonsoft.Json;
 
 namespace AdminClient.Code.JsonConverters
@@ -14,9 +17,18 @@ namespace AdminClient.Code.JsonConverters
         {
             var stringDate = (string) reader.Value;
 
-            //var date = DateTime.ParseExact(stringDate, "dd'.'MM'.'yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None);
-
-            return new DateTime(1, 1, 1);
+            try
+            {
+                return DateTime.ParseExact(stringDate, "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture);
+            }
+            catch (FormatException ex)
+            {
+                WPFClient.NotifyAsync(
+                    new FormatException($"Can't parse datetime. Source string: \"{stringDate}\"", ex),
+                    Severity.Error
+                );
+                return new DateTime();
+            }
         }
 
         public override bool CanConvert(Type objectType)
