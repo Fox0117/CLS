@@ -1,4 +1,4 @@
-package ru.lumberjaccomparators.recognizer;
+package ru.lumberjackcode.vacls.recognizer;
 
 import java.util.Comparator;
 
