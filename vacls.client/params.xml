@@ -1,12 +1,12 @@
 <VaclsClientParams>
-    <ID>string</ID>
+    <ID>Pinus</ID>
 
-    <OpenCVPath>libs/OpenCV/build/java/x64/opencv_java331.dll</OpenCVPath>
+    <OpenCVPath>libs/OpenCV/libopencv_java340.so</OpenCVPath>
 
     <ServerParams>
-        <serverURL>localhost</serverURL>
-        <port>3</port>
-        <serverTimeout>3</serverTimeout>
+        <serverURL>192.168.0.71</serverURL>
+        <port>8000</port>
+        <serverTimeout>3000</serverTimeout>
     </ServerParams>
 
     <VideoParams>
