@@ -42,6 +42,7 @@
         <module>vacls.server</module>
         <module>vacls.transfere</module>
         <module>vacls.model-trainer</module>
+        <module>vacls.database</module>
     </modules>
 
 
