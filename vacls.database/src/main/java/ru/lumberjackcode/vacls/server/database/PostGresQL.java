@@ -81,16 +81,4 @@ public class PostGresQL {
             logger.error(ex.getMessage(), ex);
         }
     }
-
-
-
-    public static void main(String[] argv) {
-        PostGresQL connection = new PostGresQL(6000, "vacls", "vaclsdbpassword", "vacls");
-        double[] foo = {0.4, 0.666, 0.7564};
-        connection.storeFace(foo);
-        System.out.println(connection.findFace(foo));
-
-    }
-
-
 }
