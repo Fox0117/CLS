@@ -62,7 +62,7 @@ public class AdminResponse {
             date = "01.01.0001 00:00";
         }
 
-        public Entry(String identifier, LocalDate date) {
+        public Entry(String identifier, LocalDateTime date) {
             this.identifier = identifier;
             this.date = date.format(formatter);
         }
