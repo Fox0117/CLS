@@ -136,4 +136,20 @@ public class AdminResponse {
             return script;
         }
     }
+
+    public static class JSParametrs implements IResponse {
+        public int total_visits;
+        public int last_year_visits;
+        public int last_month_visits;
+        public int last_week_visits;
+        public int last_day_visits;
+
+        public JSParametrs() {
+            total_visits = 0;
+            last_year_visits = 0;
+            last_month_visits = 0;
+            last_week_visits = 0;
+            last_day_visits = 0;
+        }
+    }
 }

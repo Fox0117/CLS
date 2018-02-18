@@ -4,7 +4,10 @@ import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.lumberjackcode.vacls.transfere.AdminResponse;
 
@@ -28,7 +31,7 @@ public class PostGresQL {
         this.url = "jdbc:postgresql://localhost:" + dbPort + "/" + dbName;
     }
 
-    public int findFace(double[] faceVector) {
+    public boolean findFace(double[] faceVector) {
         logger.info("Searching face vector in database...");
 
         try {
@@ -46,9 +49,13 @@ public class PostGresQL {
                     Double[] faceVectorFromDB = (Double[])(result.getArray("face_vector").getArray());
                     double[] primfaceVectorFromDB = new double[faceVectorFromDB.length];
                     for (int i = 0; i < faceVectorFromDB.length; primfaceVectorFromDB[i] = faceVectorFromDB[i], ++i);
-                    if (comporator.compare(faceVector, primfaceVectorFromDB) == 0)
-                        return result.getInt("id");
+                    if (comporator.compare(faceVector, primfaceVectorFromDB) == 0) {
+                        storeRegisteredFace(result.getInt("id"));
+                        return true;
+                    }
                 }
+
+                storeNewFace(faceVector);
             }
             finally {
                 connection.close();
@@ -58,7 +65,7 @@ public class PostGresQL {
             logger.error(ex.getMessage(), ex);
         }
 
-        return 0;
+        return false;
     }
 
     public void storeNewFace(double[] faceVector) {
@@ -88,7 +95,7 @@ public class PostGresQL {
         }
     }
 
-    public void storeRegisteredFace(int registered_user_id) {
+    public void storeRegisteredFace(int registeredUserId) {
         logger.info("Storing registered face in database...");
         try {
             Class.forName("org.postgresql.Driver");
@@ -96,9 +103,11 @@ public class PostGresQL {
             logger.info("Database connection established...");
             try {
                 //Insert registered user id into database
-                String sql = "INSERT INTO IDENTIFIED_USERS (registered_user_id) VALUES (?)";
+                String sql = "INSERT INTO IDENTIFIED_USERS (registered_user_id) VALUES (?); " +
+                        "UPDATE REGISTERED_USERS SET TOTAL_AMOUNT = TOTAL_AMOUNT + 1 WHERE ID = (?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setInt(1, registered_user_id);
+                preparedStatement.setInt(1, registeredUserId);
+                preparedStatement.setInt(2, registeredUserId);
 
                 logger.info("Uploading registered face id to database...");
                 preparedStatement.executeUpdate();
@@ -113,7 +122,7 @@ public class PostGresQL {
     }
 
     public AdminResponse.EntriesRange getEntriesRange() {
-        logger.info("Getting identified faces range...");
+        logger.info("Getting entries range...");
         try {
             Class.forName("org.postgresql.Driver");
             Connection connection = DriverManager.getConnection(url, login, password);
@@ -143,7 +152,7 @@ public class PostGresQL {
     }
 
     public AdminResponse.Entries getEntries(LocalDateTime startDate, LocalDateTime endDate) {
-        logger.info("Getting identified faces...");
+        logger.info("Getting entries...");
         AdminResponse.Entries entries = new AdminResponse.Entries();
         try {
             Class.forName("org.postgresql.Driver");
@@ -157,7 +166,7 @@ public class PostGresQL {
                 preparedStatement.setTimestamp(2, Timestamp.valueOf(endDate));
                 ResultSet result = preparedStatement.executeQuery();
 
-                logger.info("Processing range from database....");
+                logger.info("Processing entries from database....");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 while (result.next()) {
                     LocalDateTime dateTime = result.getTimestamp("identified_at").toLocalDateTime();
@@ -173,5 +182,74 @@ public class PostGresQL {
         }
 
         return entries;
+    }
+
+    public AdminResponse.JSParametrs GetAmountOfVisits(int registeredUserId) {
+        logger.info("Getting amount of visits...");
+        AdminResponse.JSParametrs resultAmount = new AdminResponse.JSParametrs();
+        try {
+            Class.forName("org.postgresql.Driver");
+            Connection connection = DriverManager.getConnection(url, login, password);
+            logger.info("Database connection established...");
+            try {
+                String sql = "SELECT TOTAL_AMOUNT FROM REGISTERED_USERS WHERE ID = (?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, registeredUserId);
+                ResultSet result = preparedStatement.executeQuery();
+                result.next();
+                resultAmount.total_visits = result.getInt(1);
+
+                //Get year amount from database
+                LocalDateTime startDate = LocalDateTime.of(LocalDateTime.now().getYear(), Month.JANUARY, 1, 0, 0, 0);
+                LocalDateTime endDate = LocalDateTime.now();
+                sql = "SELECT COUNT(*) FROM IDENTIFIED_USERS WHERE IDENTIFIED_AT BETWEEN (?) AND (?) AND REGISTERED_USER_ID = (?)";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(startDate));
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(endDate));
+                preparedStatement.setInt(3, registeredUserId);
+                result = preparedStatement.executeQuery();
+                result.next();
+                resultAmount.last_year_visits = result.getInt(1);
+
+                //Get month amount from database
+                startDate = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 1, 0, 0, 0);
+                endDate = LocalDateTime.now();
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(startDate));
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(endDate));
+                result = preparedStatement.executeQuery();
+                result.next();
+                resultAmount.last_month_visits = result.getInt(1);
+
+                //Get week amount from database
+                startDate = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(),
+                        LocalDateTime.now().getDayOfMonth() - LocalDateTime.now().getDayOfWeek().getValue() + 1, 0, 0, 0);
+                endDate = LocalDateTime.now();
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(startDate));
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(endDate));
+                result = preparedStatement.executeQuery();
+                result.next();
+                resultAmount.last_week_visits = result.getInt(1);
+
+                //Get day amount from database
+                startDate = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(),
+                        LocalDateTime.now().getDayOfMonth(), 0, 0, 0);
+                endDate = LocalDateTime.now();
+                preparedStatement.setTimestamp(1, Timestamp.valueOf(startDate));
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(endDate));
+                result = preparedStatement.executeQuery();
+                result.next();
+                resultAmount.last_day_visits = result.getInt(1);
+
+                return resultAmount;
+            }
+            finally {
+                connection.close();
+            }
+        }
+        catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+
+        return resultAmount;
     }
 }
