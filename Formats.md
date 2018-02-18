@@ -72,3 +72,24 @@ javascriptStatus = "upload"
 body:
     "function () { return \"Test message\" }" // script text
 ```
+
+## JS script function definition
+
+### Signature
+
+```javascript
+function getMessage(parameters)
+```
+returns string
+
+### parameters object
+
+```javascript
+{
+    "total_visits": 101,
+    "last_year_visits": 50,
+    "last_month_visits": 30,
+    "last_week_visits": 15,
+    "last_day_visits": 2
+}
+```
