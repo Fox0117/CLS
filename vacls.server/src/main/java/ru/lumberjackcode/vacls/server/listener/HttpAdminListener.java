@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import ru.lumberjackcode.vacls.server.HttpServer;
 import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
+import ru.lumberjackcode.vacls.server.database.PostGresQL;
 import ru.lumberjackcode.vacls.transfere.*;
 
 import com.sun.net.httpserver.*;
@@ -126,10 +127,8 @@ public class HttpAdminListener {
                     if (!headers.containsKey("startDate") || !headers.containsKey("endDate")) {
                         logger.info("Processing POST entries range request from admin...");
                         try {
-                            //TODO Get entries range
-
-                            //Now return default value
-                            AdminResponse.EntriesRange entriesRange = new AdminResponse.EntriesRange();
+                            PostGresQL connection = new PostGresQL();
+                            AdminResponse.EntriesRange entriesRange = connection.getEntriesRange();
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                             OutputStream output = exchange.getResponseBody();
                             output.write(entriesRange.getUtf8Json());
@@ -157,11 +156,8 @@ public class HttpAdminListener {
                         }
 
                         try {
-                            //TODO Process entries
-
-                            //Now return default value
-                            AdminResponse.Entries entries = new AdminResponse.Entries();
-                            entries.add(new AdminResponse.Entry());
+                            PostGresQL connection = new PostGresQL();
+                            AdminResponse.Entries entries = connection.getEntries(startDate, endDate);
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                             OutputStream output = exchange.getResponseBody();
                             output.write(entries.getUtf8Json());
@@ -231,7 +227,11 @@ public class HttpAdminListener {
                         //Upload js into file
                         try {
                             PrintWriter upload = new PrintWriter(clientScriptPath, "UTF-8");
-                            upload.print(clientScript);
+                            upload.println(clientScript);
+                            upload.print("var getMessageInternal = function(input)\n" +
+                                    "{\n" +
+                                    "    return getMessage(JSON.parse(input));\n" +
+                                    "}");
                             upload.close();
                             logger.info("CLientScript.js uploaded successfully...");
                             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);

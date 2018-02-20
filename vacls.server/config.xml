@@ -2,10 +2,16 @@
   <ConnectionParams>
     <portClient>8000</portClient>
     <portAdmin>5000</portAdmin>
+    <portDatabase>6000</portDatabase>
+    <dbLogin>vacls</dbLogin>
+    <dbPassword>vaclsdbpassword</dbPassword>
+    <dbName>vacls</dbName>
   </ConnectionParams>
   <SystemParams>
     <maxThreadPoolNumber>4</maxThreadPoolNumber>
     <OpenCvPath>libs/OpenCV/build/java/x64/opencv_java340.so</OpenCvPath>
     <ClientScriptPath>/home/fox0117/JavaProjects/VACLS/vacls.server/ClientScript.js</ClientScriptPath>
+    <ModelPath>/home/fox0117/JavaProjects/VACLS/test_write.dat</ModelPath>
+    <precision>1.0</precision>
   </SystemParams>
 </VaclsServerParams>

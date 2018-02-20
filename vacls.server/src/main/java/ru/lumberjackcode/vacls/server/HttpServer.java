@@ -1,7 +1,10 @@
 package ru.lumberjackcode.vacls.server;
 
 import org.apache.log4j.Logger;
+import ru.lumberjackcode.vacls.recognizer.Recognizer;
 import ru.lumberjackcode.vacls.server.applicationparams.VaclsServerParams;
+import ru.lumberjackcode.vacls.server.authentication.FaceAuthenticatior;
+import ru.lumberjackcode.vacls.server.database.PostGresQL;
 import ru.lumberjackcode.vacls.server.listener.HttpAdminListener;
 import ru.lumberjackcode.vacls.server.listener.HttpClientListener;
 
@@ -59,7 +62,18 @@ public class HttpServer {
         HttpClientListener clientListener=null;
         HttpAdminListener adminListener=null;
         try {
-            clientListener = new HttpClientListener(configParams.getConnectionParams().getPortClient(), configParams.getSystemParams().getMaxThreadPoolNumber(), configParams.getSystemParams().getOpenCvPath());
+            FaceAuthenticatior.setStandartParams(configParams.getSystemParams().getModelPath());
+            Recognizer.getInstance(configParams.getSystemParams().getModelPath());
+            PostGresQL.setStandartParams(
+                    configParams.getConnectionParams().getPortDatabase(),
+                    configParams.getConnectionParams().getDbLogin(),
+                    configParams.getConnectionParams().getDbPassword(),
+                    configParams.getConnectionParams().getDbName());
+            clientListener = new HttpClientListener(
+                    configParams.getConnectionParams().getPortClient(),
+                    configParams.getSystemParams().getMaxThreadPoolNumber(),
+                    configParams.getSystemParams().getOpenCvPath(),
+                    configParams.getSystemParams().getClientScriptPath());
             adminListener = new HttpAdminListener(configParams.getConnectionParams().getPortAdmin(), configParams.getSystemParams().getClientScriptPath());
             clientListener.start();
             adminListener.start();

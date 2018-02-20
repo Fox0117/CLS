@@ -10,6 +10,10 @@
         <xs:sequence>
             <xs:element type="xs:int" name="portClient" default="8000"/>
             <xs:element type="xs:int" name="portAdmin" default="5000"/>
+            <xs:element type="xs:int" name="portDatabase" default="6000"/>
+            <xs:element type="xs:string" name="dbLogin" default="vacls"/>
+            <xs:element type="xs:string" name="dbPassword" default="vaclsdbpassword"/>
+            <xs:element type="xs:string" name="dbName" default="vacls"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -18,6 +22,8 @@
             <xs:element type="xs:int" name="maxThreadPoolNumber" default="1"/>
             <xs:element type="xs:string" name="OpenCvPath"/>
             <xs:element type="xs:string" name="ClientScriptPath"/>
+            <xs:element type="xs:string" name="ModelPath"/>
+            <xs:element type="xs:double" name="precision" default="1"/>
         </xs:sequence>
     </xs:complexType>
 

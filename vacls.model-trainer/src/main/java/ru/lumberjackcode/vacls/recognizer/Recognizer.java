@@ -10,13 +10,26 @@ import java.io.IOException;
 
 public class Recognizer{
 
+    private static Recognizer singleton = null;
+
     private final static Logger log = Logger.getLogger(Recognizer.class);
 
     private FisherFaceRecognizer fisherFaceRecognizer = FisherFaceRecognizer.create();
 
     private Size trainedSize;
 
-    public Recognizer(String modelPath, Size preTrainedImSize){
+    public static Recognizer getInstance(String modelPath, Size preTrainedImSize) {
+        if (singleton == null)
+            singleton = new Recognizer(modelPath, preTrainedImSize);
+
+        return singleton;
+    }
+
+    public static Recognizer getInstance(String modelPath) {
+        return getInstance(modelPath, new Size(92, 112));
+    }
+
+    private Recognizer(String modelPath, Size preTrainedImSize){
         File preTrainedModelFile = new File(modelPath);
         if(preTrainedModelFile.exists() && preTrainedModelFile.isFile() && preTrainedModelFile.canRead()){
             try{
@@ -32,11 +45,7 @@ public class Recognizer{
         this.trainedSize = preTrainedImSize;
     }
 
-    public Recognizer(String modelPath){
-        this(modelPath, new Size(92, 112));
-    }
-
-    double[] getVector(Mat face){
+    public double[] getVector(Mat face){
 
         Mat resizedFace = new Mat(), readyToRecognitionMat = new Mat(), result = new Mat();
 

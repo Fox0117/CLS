@@ -70,6 +70,11 @@
             <artifactId>vacls.database</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>ru.lumberjackcode</groupId>
+            <artifactId>vacls.model-trainer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

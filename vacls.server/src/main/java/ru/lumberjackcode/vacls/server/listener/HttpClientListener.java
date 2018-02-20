@@ -23,10 +23,13 @@ public class HttpClientListener {
     private String openCVPath;
     private com.sun.net.httpserver.HttpServer server;
     private ExecutorService httpThreadPool;
+    private String clientScriptPath;
 
-    public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath){
+    public HttpClientListener(int portClient, int maxThreadPoolNumber, String openCVPath, String clientScriptPath){
         this.portClient = portClient;
         this.openCVPath = openCVPath;
+        this.clientScriptPath = clientScriptPath;
+        EchoHandler.clientScriptPath = clientScriptPath;
         logger.info("HttpClientListener binding on port: " + Integer.toString(this.portClient) + "...");
         try {
             server = com.sun.net.httpserver.HttpServer.create();
@@ -66,6 +69,8 @@ public class HttpClientListener {
     }
 
     public static class EchoHandler implements HttpHandler {
+        static public String clientScriptPath;
+
         @Override
         public void handle(HttpExchange exchange){
             try {
@@ -76,7 +81,6 @@ public class HttpClientListener {
                         OutputStream output = exchange.getResponseBody();
                         output.write("<h1>Client server is online</h1>".getBytes());
                         output.flush();
-                        output.close();
                     }
                     catch (IOException ex) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
@@ -99,7 +103,6 @@ public class HttpClientListener {
                     }
                     catch (Exception ex) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                        exchange.close();
                         logger.error(ex.getMessage(), ex);
                         return;
                     }
@@ -107,17 +110,15 @@ public class HttpClientListener {
                     try {
                         //Process ClientRequest
                         faceAuth = new FaceAuthenticatior();
-                        ClientResponse clientResp = faceAuth.Authentificate(clientReq);
+                        ClientResponse clientResp = faceAuth.Authentificate(clientReq, clientScriptPath);
                         //Send response to client
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         OutputStream output = exchange.getResponseBody();
                         output.write(clientResp.getUtf8Json());
                         output.flush();
-                        output.close();
                     }
                     catch (Exception ex) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-                        exchange.close();
                         logger.error(ex.getMessage(), ex);
                         return;
                     }
@@ -126,13 +127,15 @@ public class HttpClientListener {
                 //Different types of request
                 else {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
-                    exchange.close();
                     return;
                 }
             }
             catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
                 return;
+            }
+            finally {
+                exchange.close();
             }
         }
     }
