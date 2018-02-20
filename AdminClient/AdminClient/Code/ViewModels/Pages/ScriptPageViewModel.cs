@@ -40,23 +40,40 @@ namespace AdminClient.Code.ViewModels.Pages
 
         private void TestScriptCommand_Execute()
         {
+            const int totalVisits = 101;
+            const int lastYearVisits = 50;
+            const int lastMonthVisits = 30;
+            const int lastWeekVisits = 15;
+            const int lastDayVisits = 2;
+
             using (BusyDisposable())
             {
                 var browser = new System.Windows.Forms.WebBrowser {DocumentText = "0"};
                 browser.Document.OpenNew(true);
-                browser.Document.Write(
-                    $@"
+                string docString = $@"
                 <html>
                     <head>
                         <script type=""text/javascript"">
+                            function getMessageInternal() {{
+                                return getMessage(
+                                    {{
+                                        ""total_visits"": {totalVisits},
+                                        ""last_year_visits"": {lastYearVisits},
+                                        ""last_month_visits"": {lastMonthVisits},
+                                        ""last_week_visits"": {lastWeekVisits},
+                                        ""last_day_visits"": {lastDayVisits}
+                                    }}
+                                );
+                            }}
+
                             {_editor.Text}
                         </script>
                     </head>
-                </html>"
-                );
+                </html>";
+                browser.Document.Write(docString);
                 browser.Refresh();
 
-                var result = browser.Document.InvokeScript("getMessage", null);
+                var result = browser.Document.InvokeScript("getMessageInternal", null);
 
                 if (result == null)
                 {
@@ -115,6 +132,9 @@ namespace AdminClient.Code.ViewModels.Pages
         {
             using (BusyDisposable())
             {
+                _editor.Text = JSExampleResources.Example_2;
+                return;
+
                 try
                 {
                     var response = await _databaseModel.GetScriptAsync();
