@@ -17,11 +17,24 @@ import ru.lumberjackcode.vacls.recognizer.LinearDistanceComporator;
 
 public class PostGresQL {
     static private final Logger logger = Logger.getLogger(PostGresQL.class);
+    private static boolean isStandartParamsSet = false;
+    private static int standartDbPort;
+    private static String standartDbLogin;
+    private static String standartDbPassword;
+    private static String standartDbName;
     private int dbPort;
     private String url;
     private String login;
     private String password;
     private String dbName;
+
+    public static void setStandartParams(int dbPort, String login, String password, String dbName) {
+        standartDbPort = dbPort;
+        standartDbLogin = login;
+        standartDbPassword = password;
+        standartDbName = dbName;
+        isStandartParamsSet = true;
+    }
 
     public PostGresQL(int dbPort, String login, String password, String dbName) {
         this.dbPort = dbPort;
@@ -31,8 +44,17 @@ public class PostGresQL {
         this.url = "jdbc:postgresql://localhost:" + dbPort + "/" + dbName;
     }
 
-    public boolean findFace(double[] faceVector) {
+    public PostGresQL() {
+        this(standartDbPort, standartDbLogin, standartDbPassword, standartDbName);
+
+        if (!isStandartParamsSet)
+            throw new IllegalArgumentException("Standart params do not set for PostGresQl");
+    }
+
+    public ArrayList<Integer> findFace(double[] faceVector) {
         logger.info("Searching face vector in database...");
+        ArrayList<Integer> faceParams = new ArrayList<>(2);
+        faceParams.set(0, 0);
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -51,7 +73,9 @@ public class PostGresQL {
                     for (int i = 0; i < faceVectorFromDB.length; primfaceVectorFromDB[i] = faceVectorFromDB[i], ++i);
                     if (comporator.compare(faceVector, primfaceVectorFromDB) == 0) {
                         storeRegisteredFace(result.getInt("id"));
-                        return true;
+                        faceParams.set(0, result.getInt("id"));
+                        faceParams.set(1, result.getInt("total_amount"));
+                        return faceParams;
                     }
                 }
 
@@ -65,7 +89,7 @@ public class PostGresQL {
             logger.error(ex.getMessage(), ex);
         }
 
-        return false;
+        return faceParams;
     }
 
     public void storeNewFace(double[] faceVector) {
