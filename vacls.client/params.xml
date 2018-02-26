@@ -1,0 +1,23 @@
+<VaclsClientParams>
+    <ID>Pinus</ID>
+
+    <OpenCVPath>libs/OpenCV/libopencv_java340.so</OpenCVPath>
+
+    <ServerParams>
+        <serverURL>192.168.0.71</serverURL>
+        <port>8000</port>
+        <serverTimeout>3000</serverTimeout>
+    </ServerParams>
+
+    <VideoParams>
+        <CapturingDevice>0</CapturingDevice>
+        <frameWidth>320</frameWidth>
+        <frameHeight>280</frameHeight>
+    </VideoParams>
+
+    <HotKeysParams>
+        <CloseWindow>string</CloseWindow>
+        <ForceShot>string</ForceShot>
+    </HotKeysParams>
+
+</VaclsClientParams>
