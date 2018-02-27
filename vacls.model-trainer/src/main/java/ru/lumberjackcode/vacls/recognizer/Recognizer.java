@@ -58,7 +58,13 @@ public class Recognizer{
             readyToRecognitionMat = resizedFace;
         }
 
-        Core.PCAProject(readyToRecognitionMat, fisherFaceRecognizer.getMean(), fisherFaceRecognizer.getEigenVectors(), result);
+        Mat mean = fisherFaceRecognizer.getMean();
+
+        Mat eigenVectors = fisherFaceRecognizer.getEigenVectors().t();
+
+        readyToRecognitionMat = readyToRecognitionMat.reshape(1, mean.rows());
+
+        Core.PCAProject(readyToRecognitionMat, mean, eigenVectors, result);
 
         double[] toReturn = new double[(int) result.total() * result.channels()];
 
