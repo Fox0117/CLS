@@ -37,6 +37,7 @@ public class PostGresQL {
     }
 
     public PostGresQL(int dbPort, String login, String password, String dbName) {
+        logger.info("Creating connection object...");
         this.dbPort = dbPort;
         this.login = login;
         this.password = password;
@@ -53,8 +54,9 @@ public class PostGresQL {
 
     public ArrayList<Integer> findFace(double[] faceVector) {
         logger.info("Searching face vector in database...");
-        ArrayList<Integer> faceParams = new ArrayList<>(2);
-        faceParams.set(0, 0);
+        ArrayList<Integer> faceParams = new ArrayList<>();
+        faceParams.add(0);
+        faceParams.add(0);
 
         try {
             Class.forName("org.postgresql.Driver");

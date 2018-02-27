@@ -109,8 +109,7 @@ public class HttpClientListener {
 
                     try {
                         //Process ClientRequest
-                        faceAuth = new FaceAuthenticatior();
-                        ClientResponse clientResp = faceAuth.Authentificate(clientReq, clientScriptPath);
+                        ClientResponse clientResp = FaceAuthenticatior.Authentificate(clientReq, clientScriptPath);
                         //Send response to client
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         OutputStream output = exchange.getResponseBody();

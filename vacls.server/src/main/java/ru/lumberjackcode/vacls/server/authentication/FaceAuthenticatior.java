@@ -1,6 +1,7 @@
 package ru.lumberjackcode.vacls.server.authentication;
 
 import jdk.nashorn.api.scripting.ClassFilter;
+import org.apache.log4j.Logger;
 import org.opencv.core.Mat;
 import ru.lumberjackcode.vacls.transfere.*;
 import ru.lumberjackcode.vacls.server.database.PostGresQL;
@@ -25,19 +26,21 @@ import java.util.List;
 public class FaceAuthenticatior {
     private static String modelPath;
 
+    private final static Logger logger = Logger.getLogger(FaceAuthenticatior.class);
+
     public static void setStandartParams(String modelPath) {
         FaceAuthenticatior.modelPath = modelPath;
     }
 
-    public FaceAuthenticatior () {}
-
-    public ClientResponse Authentificate(ClientRequest clientRequest, String clientScriptPath) throws Exception {
+    public static ClientResponse Authentificate(ClientRequest clientRequest, String clientScriptPath) throws Exception {
+        logger.info("Authentificating face...");
         PostGresQL connection = new PostGresQL();
         Mat[] faces = clientRequest.getFrame();
-        ArrayList<Integer> faceMaxParams = new ArrayList<>(2), faceParams;
-        faceMaxParams.set(1, 0);
-        faceMaxParams.set(0, 0);
+        ArrayList<Integer> faceMaxParams = new ArrayList<>(), faceParams;
+        faceMaxParams.add(0);
+        faceMaxParams.add(0);
         double[] faceVector;
+        logger.info(modelPath);
         for (Mat face : faces) {
             faceVector = (Recognizer.getInstance(modelPath)).getVector(face);
             faceParams = connection.findFace(faceVector);
@@ -45,8 +48,10 @@ public class FaceAuthenticatior {
                 faceMaxParams = faceParams;
         }
 
-        if (faceMaxParams.get(0) <= 0)
+        if (faceMaxParams.get(0) <= 0) {
+            logger.info("User not found...");
             return new ClientResponse(false, "User not found", 0);
+        }
 
         AdminResponse.JSParametrs jsParametrs = connection.GetAmountOfVisits(faceMaxParams.get(0));
         jsParametrs.total_visits = 100;
