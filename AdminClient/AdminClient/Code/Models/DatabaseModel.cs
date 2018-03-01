@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +15,24 @@ namespace AdminClient.Code.Models
 {
     internal class DatabaseModel : IDatabaseModel
     {
-        private const string StartAddress = "http://capitangaga.redirectme.net:5000/";
-        private const string EntriesAddress = StartAddress + "entries/";
-        private const string JavaScriptAddress = StartAddress + "js/";
+        private static readonly string EntriesAddress;
+        private static readonly string JavaScriptAddress;
 
         private static readonly JsonConverter ResponseConverter = new ResponseJsonConverter();
+
+        static DatabaseModel()
+        {
+            string exeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+            string appSettingsFile = Path.Combine(exeFolder, "appsettings.json");
+
+            var appSettings = 
+                JsonConvert.DeserializeObject<AppSettings>(
+                    File.ReadAllText(appSettingsFile, Encoding.UTF8));
+
+            string startAddress = appSettings.SiteStartPath + "/";
+            EntriesAddress = startAddress + appSettings.SiteEntriesMethod + "/";
+            JavaScriptAddress = startAddress + appSettings.SiteJsMethod + "/";
+        }
 
         public EntriesRangeResponse GetEntriesRange()
         {

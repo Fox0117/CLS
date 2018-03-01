@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using AdminClient.Code.Interfaces;
 using AdminClient.Code.Models;
 using AdminClient.Code.Responses;
@@ -14,6 +15,7 @@ using Bugsnag;
 using Bugsnag.Clients;
 using MVVM_Tools.Code.Commands;
 using MVVM_Tools.Code.Providers;
+using Newtonsoft.Json;
 
 namespace AdminClient.Code.ViewModels.Pages
 {
@@ -52,8 +54,7 @@ namespace AdminClient.Code.ViewModels.Pages
         public PropertyProvider<DateTime> MinimumDate { get; }
         public PropertyProvider<DateTime> MaximumDate { get; }
 
-        public ICommand ProcessRangeCommand => _processRangeCommand;
-        private readonly ActionCommand _processRangeCommand;
+        public IActionCommand ProcessRangeCommand { get; }
 
         public ChartPageViewModel()
         {
@@ -61,7 +62,7 @@ namespace AdminClient.Code.ViewModels.Pages
             MaximumDate = CreateProviderWithNotify<DateTime>(nameof(MaximumDate));
             GroupingByIndex = CreateProviderWithNotify<int>(nameof(GroupingByIndex));
 
-            _processRangeCommand = new ActionCommand(ProcessRangeCommand_Execute, () => !IsBusy);
+            ProcessRangeCommand = new ActionCommand(ProcessRangeCommand_Execute, () => !IsBusy);
 
             GroupingByItems.AddAll(
                 StringResources.GroupByMonth_Item,
@@ -142,7 +143,7 @@ namespace AdminClient.Code.ViewModels.Pages
 
         private void RaiseCommandsCanExecute()
         {
-            _processRangeCommand.RaiseCanExecuteChanged();
+            ProcessRangeCommand.RaiseCanExecuteChanged();
         }
 
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)

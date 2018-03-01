@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using AdminClient.Code.Interfaces;
 using AdminClient.Code.Models;
 using AdminClient.Code.Utils;
@@ -22,18 +21,15 @@ namespace AdminClient.Code.ViewModels.Pages
         private readonly TextEditor _editor;
         private readonly IDatabaseModel _databaseModel = new DatabaseModel();
 
-        public ICommand TestScriptCommand => _testScriptCommand;
-        private readonly ActionCommand _testScriptCommand;
-
-        public ICommand SendScriptCommand => _sendScriptCommand;
-        private readonly ActionCommand _sendScriptCommand;
+        public IActionCommand TestScriptCommand { get; }
+        public IActionCommand SendScriptCommand { get; }
 
         public ScriptPageViewModel(TextEditor editor)
         {
             _editor = editor;
 
-            _testScriptCommand = new ActionCommand(TestScriptCommand_Execute, NotBusy);
-            _sendScriptCommand = new ActionCommand(SendScriptCommand_Execute, NotBusy);
+            TestScriptCommand = new ActionCommand(TestScriptCommand_Execute, () => !IsBusy);
+            SendScriptCommand = new ActionCommand(SendScriptCommand_Execute, () => !IsBusy);
 
             PropertyChanged += OnPropertyChanged;
         }
@@ -110,8 +106,6 @@ namespace AdminClient.Code.ViewModels.Pages
             }
         }
 
-        private bool NotBusy() => !IsBusy;
-
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             switch (args.PropertyName)
@@ -124,8 +118,8 @@ namespace AdminClient.Code.ViewModels.Pages
 
         private void RaiseCommandsCanExecute()
         {
-            _testScriptCommand.RaiseCanExecuteChanged();
-            _sendScriptCommand.RaiseCanExecuteChanged();
+            TestScriptCommand.RaiseCanExecuteChanged();
+            SendScriptCommand.RaiseCanExecuteChanged();
         }
 
         public override async Task LoadItems()

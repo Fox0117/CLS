@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using AdminClient.Code.Utils;
 using AdminClient.Code.ViewModels.Controls;
 using AdminClient.Resources.Localizations;
@@ -20,12 +19,12 @@ namespace AdminClient.Code.ViewModels.Windows
         public ReadOnlyObservableCollection<LeftMenuItemViewModel> LeftMenuItems { get; }
         private readonly ObservableCollection<LeftMenuItemViewModel> _leftMenuItems;
 
-        public ICommand LeftMenuClickCommand => _leftMenuClickCommand;
-        private readonly ActionCommand<LeftMenuItemViewModel> _leftMenuClickCommand;
+        public IActionCommand<LeftMenuItemViewModel> LeftMenuClickCommand { get; }
 
         public AdminWindowViewModel()
         {
-            _leftMenuClickCommand = new ActionCommand<LeftMenuItemViewModel>(LeftCommandClickCommand_Execute, _ => !IsBusy);
+            LeftMenuClickCommand = 
+                new ActionCommand<LeftMenuItemViewModel>(LeftCommandClickCommand_Execute, _ => !IsBusy);
 
             _leftMenuItems = new ObservableCollection<LeftMenuItemViewModel>();
             LeftMenuItems = new ReadOnlyObservableCollection<LeftMenuItemViewModel>(_leftMenuItems);
