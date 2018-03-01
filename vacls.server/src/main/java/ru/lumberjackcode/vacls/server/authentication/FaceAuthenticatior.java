@@ -54,7 +54,6 @@ public class FaceAuthenticatior {
         }
 
         AdminResponse.JSParametrs jsParametrs = connection.GetAmountOfVisits(faceMaxParams.get(0));
-        jsParametrs.total_visits = 100;
         NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
         ScriptEngine engine = factory.getScriptEngine(new RestrictAllCF());
         engine.eval(new String(Files.readAllBytes(Paths.get(clientScriptPath))));

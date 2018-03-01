@@ -18,6 +18,7 @@ import ru.lumberjackcode.vacls.recognizer.LinearDistanceComporator;
 public class PostGresQL {
     static private final Logger logger = Logger.getLogger(PostGresQL.class);
     private static boolean isStandartParamsSet = false;
+    private static double precision;
     private static int standartDbPort;
     private static String standartDbLogin;
     private static String standartDbPassword;
@@ -28,25 +29,27 @@ public class PostGresQL {
     private String password;
     private String dbName;
 
-    public static void setStandartParams(int dbPort, String login, String password, String dbName) {
+    public static void setStandartParams(int dbPort, String login, String password, String dbName, double precision) {
         standartDbPort = dbPort;
         standartDbLogin = login;
         standartDbPassword = password;
         standartDbName = dbName;
         isStandartParamsSet = true;
+        PostGresQL.precision = precision;
     }
 
-    public PostGresQL(int dbPort, String login, String password, String dbName) {
+    public PostGresQL(int dbPort, String login, String password, String dbName, double precision) {
         logger.info("Creating connection object...");
         this.dbPort = dbPort;
         this.login = login;
         this.password = password;
         this.dbName = dbName;
+        PostGresQL.precision = precision;
         this.url = "jdbc:postgresql://localhost:" + dbPort + "/" + dbName;
     }
 
     public PostGresQL() {
-        this(standartDbPort, standartDbLogin, standartDbPassword, standartDbName);
+        this(standartDbPort, standartDbLogin, standartDbPassword, standartDbName, precision);
 
         if (!isStandartParamsSet)
             throw new IllegalArgumentException("Standart params do not set for PostGresQl");
@@ -68,7 +71,7 @@ public class PostGresQL {
                 ResultSet result = statement.executeQuery("SELECT * FROM REGISTERED_USERS");
 
                 logger.info("Processing result from database...");
-                LinearDistanceComporator comporator = new LinearDistanceComporator(1);
+                LinearDistanceComporator comporator = new LinearDistanceComporator(precision);
                 while (result.next()) {
                     Double[] faceVectorFromDB = (Double[])(result.getArray("face_vector").getArray());
                     double[] primfaceVectorFromDB = new double[faceVectorFromDB.length];
@@ -159,10 +162,16 @@ public class PostGresQL {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.");
                 ResultSet minRange = statement.executeQuery("SELECT min(identified_at) FROM IDENTIFIED_USERS");
                 minRange.next();
-                LocalDateTime minDateTime = minRange.getTimestamp("min").toLocalDateTime();
+                Timestamp minTimestamp = minRange.getTimestamp("min");
+                LocalDateTime minDateTime = LocalDateTime.of(1, 1, 1, 0, 0, 0);
+                LocalDateTime maxDateTime = LocalDateTime.of(1, 1, 1, 0, 0, 0);
+                if (minTimestamp != null)
+                    minDateTime = minTimestamp.toLocalDateTime();
                 ResultSet maxRange = statement.executeQuery("SELECT max(identified_at) FROM IDENTIFIED_USERS");
                 maxRange.next();
-                LocalDateTime maxDateTime = maxRange.getTimestamp("max").toLocalDateTime();
+                Timestamp maxTimestamp = maxRange.getTimestamp("max");
+                if (minTimestamp != null)
+                    maxDateTime = maxTimestamp.toLocalDateTime();
 
                 return new AdminResponse.EntriesRange("", minDateTime, maxDateTime);
             }

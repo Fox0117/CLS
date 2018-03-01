@@ -68,7 +68,8 @@ public class HttpServer {
                     configParams.getConnectionParams().getPortDatabase(),
                     configParams.getConnectionParams().getDbLogin(),
                     configParams.getConnectionParams().getDbPassword(),
-                    configParams.getConnectionParams().getDbName());
+                    configParams.getConnectionParams().getDbName(),
+                    configParams.getSystemParams().getPrecision());
             clientListener = new HttpClientListener(
                     configParams.getConnectionParams().getPortClient(),
                     configParams.getSystemParams().getMaxThreadPoolNumber(),
