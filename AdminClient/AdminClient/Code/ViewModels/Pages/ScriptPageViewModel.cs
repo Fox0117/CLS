@@ -126,9 +126,6 @@ namespace AdminClient.Code.ViewModels.Pages
         {
             using (BusyDisposable())
             {
-                _editor.Text = JSExampleResources.Example_2;
-                return;
-
                 try
                 {
                     var response = await _databaseModel.GetScriptAsync();
