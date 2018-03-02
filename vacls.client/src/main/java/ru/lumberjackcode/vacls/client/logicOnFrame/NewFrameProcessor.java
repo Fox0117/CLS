@@ -47,6 +47,8 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
 
     private CloseableHttpAsyncClient asyncClient = HttpAsyncClients.createDefault();
 
+    private int waitFrames;
+
     public NewFrameProcessor(VaclsClientParams vaclsClientParams) throws Exception{
 
         this.serverURI = new URIBuilder()
@@ -66,6 +68,9 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
 
     @Override
     public void OnNewFrame(Mat frame) {
+
+
+
         List<Rect> foundFaces = FaceFinder.findFaces(frame);
 
 
@@ -81,6 +86,10 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
             visualise(frame.clone(), foundFaces);
         }
 
+        if(waitFrames > 0){
+            waitFrames--;
+            return;
+        }
 
         if(foundFaces.size() > 0){
 
@@ -144,6 +153,8 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
 
             annauncer.showMessage(clientResponse.getMessage());
 
+            waitFrames = 240;
+
             synchronized (annauncer){
                 try {
                     annauncer.wait();
@@ -152,11 +163,6 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
                 }
             }
 
-            try{
-                Thread.sleep(5000);
-            } catch (InterruptedException ex){
-                log.error("Interrupted ex", ex);
-            }
         }
     }
 

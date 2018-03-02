@@ -6,14 +6,21 @@ import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class FaceFinder {
 
     private static CascadeClassifier faceCascade;
 
-    static {
-        faceCascade = new CascadeClassifier("vacls.client/resources/haarcascade_frontalface_default.xml");
+    static{
+        File cascadeFile = new File("haarcascade_frontalface_default.xml");
+        if(cascadeFile.exists() && cascadeFile.isFile() && cascadeFile.canRead()){
+            faceCascade = new CascadeClassifier(cascadeFile.getAbsolutePath());
+        } else {
+            throw new IllegalArgumentException("File not found");
+        }
     }
 
     public static List<Rect> findFaces(Mat frame){
