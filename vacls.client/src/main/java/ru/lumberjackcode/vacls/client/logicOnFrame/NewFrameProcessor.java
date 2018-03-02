@@ -151,6 +151,12 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
                     log.error(ex);
                 }
             }
+
+            try{
+                Thread.sleep(5000);
+            } catch (InterruptedException ex){
+                log.error("Interrupted ex", ex);
+            }
         }
     }
 
