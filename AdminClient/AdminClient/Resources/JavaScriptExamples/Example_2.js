@@ -8,5 +8,18 @@
 // }
 
 function getMessage(parameters) {
-    return "test message";
+    if (parameters.total_visits > 1000)
+        return "Скидка 15%";
+
+    if (parameters.total_visits > 100) {
+        if (parameters.last_week_visits > 10)
+            return "Скидка 10%";
+
+        return "Скидка 7%";
+    }
+
+    if (parameters.total_visits > 5)
+        return "Скидка 5%";
+
+    return "Без скидки";
 }
