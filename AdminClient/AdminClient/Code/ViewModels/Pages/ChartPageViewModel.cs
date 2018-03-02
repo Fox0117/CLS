@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 using AdminClient.Code.Interfaces;
 using AdminClient.Code.Models;
@@ -15,7 +13,6 @@ using Bugsnag;
 using Bugsnag.Clients;
 using MVVM_Tools.Code.Commands;
 using MVVM_Tools.Code.Providers;
-using Newtonsoft.Json;
 
 namespace AdminClient.Code.ViewModels.Pages
 {
@@ -71,7 +68,7 @@ namespace AdminClient.Code.ViewModels.Pages
                 StringResources.GroupByMinute_Item
             );
 
-            GroupingByIndex.Value = 2;
+            GroupingByIndex.Value = 1;
 
             PropertyChanged += OnPropertyChanged;
         }
@@ -119,13 +116,15 @@ namespace AdminClient.Code.ViewModels.Pages
 
         private async Task LoadEntries()
         {
-            var items = await _databaseModel.GetEntriesAsync(MinimumDate.Value, MaximumDate.Value);
-
-            _entries = items.entries;
-
-            // todo: remove when server side will be done
-            _entries = await Task.Run(() => EntriesUtils.GenEntries(30000));
-            // ---
+            if (AppSettings.GetInstanse().TestDataEnabled)
+            {
+                _entries = await Task.Run(() => EntriesUtils.GenEntries(3000));
+            }
+            else
+            {
+                var items = await _databaseModel.GetEntriesAsync(MinimumDate.Value, MaximumDate.Value);
+                _entries = items.entries;
+            }
 
             _entries.Sort((f, s) => f.date.CompareTo(s.date));
         }
