@@ -146,6 +146,8 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
                 return;
             }
 
+            waitFrames = 90;
+
             if(! clientResponse.isNeedToBeShown()){
                 log.debug("No need in showing");
                 return;
@@ -153,7 +155,6 @@ public class NewFrameProcessor implements INewFrameHandler, AutoCloseable{
 
             annauncer.showMessage(clientResponse.getMessage());
 
-            waitFrames = 240;
 
             synchronized (annauncer){
                 try {
